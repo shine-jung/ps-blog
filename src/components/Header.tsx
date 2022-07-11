@@ -87,10 +87,15 @@ function Header() {
           <Toolbar disableGutters>
             <CodeIcon fontSize="large" sx={{ mr: 2 }} />
             <Typography
-              variant="h6"
+              variant="h5"
               noWrap
               component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
+              sx={{
+                display: { xs: "none", sm: "block" },
+                fontFamily: "Spoqa Han Sans Neo, monospace",
+                fontWeight: 300,
+                letterSpacing: "0.25rem",
+              }}
             >
               pslog
             </Typography>

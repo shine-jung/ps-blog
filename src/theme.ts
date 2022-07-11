@@ -10,8 +10,8 @@ const breakPoints = {
   },
 };
 
-const title = {
-  fontFamily: "'Source Sans Pro', sans-serif",
+const textStyle = {
+  fontFamily: "Source Sans Pro, sans-serif",
 };
 
 export const lightTheme = createTheme({
@@ -26,9 +26,7 @@ export const lightTheme = createTheme({
       paper: "#fff",
     },
   },
-  typography: {
-    h6: title,
-  },
+  typography: textStyle,
 });
 
 export const darkTheme = createTheme({
@@ -43,7 +41,5 @@ export const darkTheme = createTheme({
       paper: "#101827",
     },
   },
-  typography: {
-    h6: title,
-  },
+  typography: textStyle,
 });
