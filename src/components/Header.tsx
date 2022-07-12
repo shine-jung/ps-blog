@@ -14,7 +14,7 @@ import {
   Container,
   Avatar,
   Tooltip,
-  Button,
+  ButtonBase,
 } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import SearchIcon from "@mui/icons-material/Search";
@@ -60,9 +60,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const NavButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.text.primary,
+const NavButton = styled(ButtonBase)(({ theme }) => ({
   display: "block",
+  padding: "6px 8px",
 }));
 
 interface IHeaderProps {
@@ -70,8 +70,8 @@ interface IHeaderProps {
 }
 
 function Header({ userObj }: IHeaderProps) {
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const isHome = userObj?.displayName && location.pathname === "/home";
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -85,7 +85,6 @@ function Header({ userObj }: IHeaderProps) {
       logout();
       alert("로그아웃 되었습니다");
     }
-    navigate({ pathname: "/" });
     handleCloseUserMenu();
   };
 
@@ -201,7 +200,7 @@ function Header({ userObj }: IHeaderProps) {
                     handleCloseUserMenu();
                   }}
                 >
-                  <Typography textAlign="center">프로필</Typography>
+                  <Typography textAlign="center">프로필 편집</Typography>
                 </MenuItem>
                 <MenuItem onClick={handleClickLogoutMenu}>
                   <Typography textAlign="center">로그아웃</Typography>

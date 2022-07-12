@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { IUserObj } from "./module/types";
 import Header from "./components/Header";
-import Auth from "./routes/Auth";
+import SignIn from "./routes/SignIn";
 import Main from "./routes/Main";
 import Profile from "./routes/Profile";
 import Home from "./routes/Home";
@@ -22,11 +22,14 @@ function Router({ refreshUser, isLoggedIn, userObj }: IRouterProps) {
           <>
             <Route path="/" element={<Main />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/profile"
+              element={<Profile refreshUser={refreshUser} userObj={userObj} />}
+            />
             <Route path="/post" element={<Post />} />
           </>
         ) : (
-          <Route path="/" element={<Auth />} />
+          <Route path="/*" element={<SignIn />} />
         )}
       </Routes>
     </BrowserRouter>

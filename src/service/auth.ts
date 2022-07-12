@@ -19,5 +19,4 @@ export const login = (provider: string) => {
 
 export const logout = () => {
   signOut(auth);
-  return;
 };
