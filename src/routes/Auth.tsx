@@ -1,10 +1,9 @@
-import * as React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { login } from "../service/auth";
 import LightDarkToggle from "../components/LightDarkToggle";
 import { Button, Box, Typography, Container, Link } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 
 function Copyright(props: any) {
   return (

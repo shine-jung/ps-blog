@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IUserObj } from "../module/types";
 import { styled, alpha } from "@mui/material/styles";
 import {
@@ -13,13 +14,12 @@ import {
   Container,
   Avatar,
   Tooltip,
+  Button,
 } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import SearchIcon from "@mui/icons-material/Search";
 import { logout } from "../service/auth";
 import LightDarkToggle from "./LightDarkToggle";
-
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,17 +60,33 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const NavButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  display: "block",
+}));
+
 interface IHeaderProps {
   userObj: IUserObj | null;
 }
 
 function Header({ userObj }: IHeaderProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHome = userObj?.displayName && location.pathname === "/home";
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+  const handleClickLogoutMenu = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      logout();
+      alert("로그아웃 되었습니다");
+    }
+    navigate({ pathname: "/" });
+    handleCloseUserMenu();
   };
 
   return (
@@ -84,20 +100,65 @@ function Header({ userObj }: IHeaderProps) {
       >
         <Container maxWidth="lg">
           <Toolbar disableGutters>
-            <CodeIcon fontSize="large" sx={{ mr: 2 }} />
-            <Typography
-              variant="h5"
-              noWrap
-              component="div"
-              sx={{
-                display: { xs: "none", sm: "block" },
-                fontFamily: "Spoqa Han Sans Neo, monospace",
-                fontWeight: 300,
-                letterSpacing: "0.25rem",
-              }}
+            <IconButton
+              size="small"
+              sx={{ mr: 2 }}
+              onClick={() => navigate({ pathname: "/" })}
             >
-              pslog
-            </Typography>
+              <CodeIcon fontSize="large" />
+            </IconButton>
+            {isHome ? (
+              <>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                    fontFamily: "Spoqa Han Sans Neo, monospace",
+                    fontWeight: 300,
+                    userSelect: "none",
+                  }}
+                  onClick={() => navigate({ pathname: "/home" })}
+                >
+                  {userObj.displayName}님의 블로그
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Typography
+                  variant="h5"
+                  noWrap
+                  component="div"
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                    fontFamily: "Spoqa Han Sans Neo, monospace",
+                    fontWeight: 300,
+                    letterSpacing: "0.25rem",
+                    userSelect: "none",
+                  }}
+                  onClick={() => navigate({ pathname: "/" })}
+                >
+                  pslog
+                </Typography>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    display: { xs: "none", md: "flex" },
+                    ml: 2,
+                  }}
+                >
+                  <NavButton
+                    onClick={() => {
+                      navigate({ pathname: "/home" });
+                    }}
+                  >
+                    내 블로그
+                  </NavButton>
+                </Box>
+              </>
+            )}
+
             <Box sx={{ flexGrow: 1 }} />
             <Search>
               <SearchIconWrapper>
@@ -134,17 +195,15 @@ function Header({ userObj }: IHeaderProps) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
                 <MenuItem
                   onClick={() => {
-                    logout();
+                    navigate({ pathname: "/profile" });
                     handleCloseUserMenu();
                   }}
                 >
+                  <Typography textAlign="center">프로필</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleClickLogoutMenu}>
                   <Typography textAlign="center">로그아웃</Typography>
                 </MenuItem>
               </Menu>

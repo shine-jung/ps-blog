@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Router from "./Router";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
 import { lightTheme, darkTheme } from "./module/theme";
 import { useRecoilValue } from "recoil";
@@ -15,6 +15,15 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color:inherit;
   }
+`;
+
+const Loader = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 300;
 `;
 
 function App() {
@@ -61,7 +70,7 @@ function App() {
             userObj={userObj ?? null}
           />
         ) : (
-          "Initializing..."
+          <Loader>Initializing...</Loader>
         )}
       </ThemeProvider>
     </>
