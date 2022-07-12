@@ -1,10 +1,14 @@
+import { useEffect, useState } from "react";
 import Router from "./Router";
 import { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
-import { lightTheme, darkTheme } from "./theme";
+import { lightTheme, darkTheme } from "./module/theme";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./atoms";
 import { CssBaseline } from "@mui/material";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { auth } from "./service/firebase";
+import { IUserObj, IUserUpdateArgs } from "./module/types";
 
 const GlobalStyle = createGlobalStyle`
   a {
@@ -15,12 +19,50 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
+  const [init, setInit] = useState(false);
+  const [userObj, setUserObj] = useState<IUserObj | null>();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserObj({
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          uid: user.uid,
+          updateProfile: (args: IUserUpdateArgs) => updateProfile(user, args),
+        });
+      } else {
+        setUserObj(null);
+      }
+      setInit(true);
+    });
+  }, []);
+  const refreshUser = () => {
+    const user = auth.currentUser;
+    if (user) {
+      setUserObj({
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        updateProfile: (args: IUserUpdateArgs) => updateProfile(user, args),
+      });
+    }
+  };
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <CssBaseline />
         <GlobalStyle />
-        <Router />
+        {init ? (
+          <Router
+            refreshUser={refreshUser}
+            isLoggedIn={Boolean(userObj)}
+            userObj={userObj ?? null}
+          />
+        ) : (
+          "Initializing..."
+        )}
       </ThemeProvider>
     </>
   );

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../atoms";
+import { IUserObj } from "../module/types";
 import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
@@ -17,8 +16,8 @@ import {
 } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import SearchIcon from "@mui/icons-material/Search";
-import Moon from "@mui/icons-material/DarkMode";
-import Sun from "@mui/icons-material/LightMode";
+import { logout } from "../service/auth";
+import LightDarkToggle from "./LightDarkToggle";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -61,12 +60,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function Header() {
-  const isDark = useRecoilValue(isDarkAtom);
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
-  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+interface IHeaderProps {
+  userObj: IUserObj | null;
+}
 
+function Header({ userObj }: IHeaderProps) {
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -109,12 +108,12 @@ function Header() {
                 inputProps={{ "aria-label": "search" }}
               />
             </Search>
-            <Box sx={{ flexGrow: 0, ml: 2 }}>
-              <Tooltip title="Open settings">
+            <Box sx={{ flexGrow: 0, mx: 2 }}>
+              <Tooltip title="메뉴 열기" arrow>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
-                    alt="Remy Sharp"
-                    src="/static/images/avatar/2.jpg"
+                    alt={userObj?.displayName ?? "이름"}
+                    src={userObj?.photoURL ?? undefined}
                     sx={{ width: 32, height: 32 }}
                   />
                 </IconButton>
@@ -140,18 +139,17 @@ function Header() {
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
+                <MenuItem
+                  onClick={() => {
+                    logout();
+                    handleCloseUserMenu();
+                  }}
+                >
+                  <Typography textAlign="center">로그아웃</Typography>
+                </MenuItem>
               </Menu>
             </Box>
-            <IconButton
-              onClick={toggleDarkAtom}
-              sx={{ width: 32, height: 32, ml: 1 }}
-            >
-              {isDark ? (
-                <Sun sx={{ width: 20, height: 20 }} />
-              ) : (
-                <Moon sx={{ width: 20, height: 20 }} />
-              )}
-            </IconButton>
+            <LightDarkToggle />
           </Toolbar>
         </Container>
       </AppBar>
