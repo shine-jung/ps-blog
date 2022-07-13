@@ -8,6 +8,7 @@ function LightDarkToggle() {
   const isDark = useRecoilValue(isDarkAtom);
   const setDarkAtom = useSetRecoilState(isDarkAtom);
   const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+  localStorage.setItem("darkMode", isDark.toString());
   return (
     <>
       <Tooltip title={isDark ? "라이트 모드" : "다크 모드"} arrow>
