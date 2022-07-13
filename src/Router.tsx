@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { IUserObj } from "./module/types";
+import { IUserObj } from "./modules/types";
 import Header from "./components/Header";
 import SignIn from "./routes/SignIn";
 import Main from "./routes/Main";

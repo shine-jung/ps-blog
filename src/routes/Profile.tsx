@@ -3,7 +3,7 @@ import { deleteUser } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Box, Container, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { IUserObj, IUserUpdateArgs } from "../module/types";
+import { IUserObj, IUserUpdateArgs } from "../modules/types";
 import { logout } from "../service/auth";
 
 interface IProfileProps {
@@ -12,6 +12,7 @@ interface IProfileProps {
 }
 
 function Profile({ refreshUser, userObj }: IProfileProps) {
+  const [isImgUpdateLoading, setIsImgUpdateLoading] = useState(false);
   const [newImgFile, setNewImgFile] = useState<File | null>(null);
   const [newImgDir, setNewImgDir] = useState<string | ArrayBuffer | null>(
     userObj?.photoURL ?? null
@@ -24,16 +25,12 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     fileReader.onload = function () {
       setNewImgDir(fileReader.result);
     };
-    const {
-      target: { files },
-    } = event;
+    const { files } = event.target;
     setNewImgFile(files ? files[0] : null);
     if (files) fileReader.readAsDataURL(files[0]);
   };
   const onChangeProfileName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = event;
+    const { value } = event.target;
     setNewDisplayName(value);
   };
   const onSubmitProfileImg = async (
@@ -45,20 +42,19 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       return;
     }
     if (userObj?.uid && newImgFile?.name) {
+      setIsImgUpdateLoading(true);
       const storageRef = ref(storage, `${userObj.uid}_${newImgFile.name}`);
       await uploadBytes(storageRef, newImgFile);
       getDownloadURL(ref(storage, `${userObj.uid}_${newImgFile.name}`)).then(
         async (url) => {
-          await userObj
-            ?.updateProfile({
-              photoURL: url,
-            } as IUserUpdateArgs)
-            .then(() => {
-              alert("사진 업데이트가 완료되었습니다");
-            });
+          await userObj?.updateProfile({
+            photoURL: url,
+          } as IUserUpdateArgs);
+          refreshUser();
+          setIsImgUpdateLoading(false);
+          alert("사진 업데이트가 완료되었습니다");
         }
       );
-      refreshUser();
     }
   };
   const onSubmitProfileName = async (
@@ -70,17 +66,18 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       return;
     }
     if (userObj?.displayName !== newDisplayName) {
-      await userObj
-        ?.updateProfile({
-          displayName: newDisplayName,
-        } as IUserUpdateArgs)
-        .then(() => {
-          alert("이름이 업데이트 되었습니다");
-        });
+      await userObj?.updateProfile({
+        displayName: newDisplayName,
+      } as IUserUpdateArgs);
       refreshUser();
+      alert("이름이 업데이트 되었습니다");
     }
   };
   const onClickDeleteBtn = () => {
+    if (!window.confirm("계정을 삭제하시겠습니까? 모든 데이터가 삭제됩니다")) {
+      alert("취소되었습니다");
+      return;
+    }
     const user = auth.currentUser;
     if (user) {
       deleteUser(user)
@@ -89,7 +86,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
         })
         .catch((error) => {
           logout();
-          alert("다시 로그인 후 시도해주세요");
+          alert("인증이 만료되었습니다. 다시 로그인 후 시도해주세요");
         });
     }
   };
@@ -105,6 +102,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
           }}
         >
           <Typography>Profile</Typography>
+          <Typography>{userObj?.email}</Typography>
           <Typography>{userObj?.displayName}</Typography>
           <img
             alt={userObj?.displayName ?? "이름"}
@@ -121,6 +119,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
               />
               <input type="submit" value="프로필 사진 변경" />
             </form>
+            {isImgUpdateLoading ? "업데이트 중" : "업데이트 중 아님"}
           </div>
           <div>
             <form onSubmit={onSubmitProfileName}>

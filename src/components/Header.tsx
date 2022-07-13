@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IUserObj } from "../module/types";
+import { IUserObj } from "../modules/types";
 import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,

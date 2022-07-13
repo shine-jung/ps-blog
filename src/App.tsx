@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import Router from "./Router";
 import styled, { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
-import { lightTheme, darkTheme } from "./module/theme";
+import { lightTheme, darkTheme } from "./modules/theme";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./atoms";
 import { CssBaseline } from "@mui/material";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { auth } from "./service/firebase";
-import { IUserObj, IUserUpdateArgs } from "./module/types";
+import { IUserObj, IUserUpdateArgs } from "./modules/types";
 
 const GlobalStyle = createGlobalStyle`
   a {
@@ -70,7 +70,7 @@ function App() {
             userObj={userObj ?? null}
           />
         ) : (
-          <Loader>Initializing...</Loader>
+          <Loader>Loading...</Loader>
         )}
       </ThemeProvider>
     </>
