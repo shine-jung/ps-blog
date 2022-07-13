@@ -1,5 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../atoms";
+import { isDarkAtom } from "../service/atoms";
 import { IconButton, Tooltip } from "@mui/material";
 import Moon from "@mui/icons-material/DarkMode";
 import Sun from "@mui/icons-material/LightMode";

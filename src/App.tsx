@@ -4,7 +4,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
 import { lightTheme, darkTheme } from "./modules/theme";
 import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "./atoms";
+import { isDarkAtom } from "./service/atoms";
 import { CssBaseline } from "@mui/material";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { auth } from "./service/firebase";

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IUserObj } from "../modules/types";
-import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
   Box,
@@ -15,6 +14,8 @@ import {
   Avatar,
   Tooltip,
   ButtonBase,
+  styled,
+  alpha,
 } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import SearchIcon from "@mui/icons-material/Search";
@@ -72,7 +73,7 @@ interface IHeaderProps {
 function Header({ userObj }: IHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isHome = userObj?.displayName && location.pathname === "/home";
+  const isHome = userObj?.displayName && location.pathname.includes("/home");
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -89,9 +90,9 @@ function Header({ userObj }: IHeaderProps) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ height: { xs: "56px", sm: "64px" }, flexGrow: 1 }}>
       <AppBar
-        position="static"
+        position="fixed"
         sx={{
           boxShadow:
             "0 1px 3px 0 rgb(0 0 0/0.1), 0 1px 2px -1px rgb(0 0 0/0.1)",
@@ -117,6 +118,7 @@ function Header({ userObj }: IHeaderProps) {
                     fontFamily: "Spoqa Han Sans Neo, monospace",
                     fontWeight: 300,
                     userSelect: "none",
+                    cursor: "pointer",
                   }}
                   onClick={() => navigate({ pathname: "/home" })}
                 >
@@ -135,6 +137,7 @@ function Header({ userObj }: IHeaderProps) {
                     fontWeight: 300,
                     letterSpacing: "0.25rem",
                     userSelect: "none",
+                    cursor: "pointer",
                   }}
                   onClick={() => navigate({ pathname: "/" })}
                 >

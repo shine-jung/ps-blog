@@ -1,16 +1,12 @@
 import { Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Home() {
-  const navigate = useNavigate();
-  const onClick = () => {
-    navigate({ pathname: "/post" });
-  };
   return (
     <>
-      <Typography>
-        Home<button onClick={onClick}>글쓰기</button>
-      </Typography>
+      <Typography>블로그 홈</Typography>
+      <Link to="post">글쓰기</Link>
+      <Link to="view">글보기</Link>
     </>
   );
 }

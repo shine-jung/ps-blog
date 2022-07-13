@@ -1,0 +1,17 @@
+:root {
+  --input-text-color: #222222;
+  --input-background-color: #f9fafb;
+  --input-border-radius: 4px;
+}
+
+.toastui-editor,
+.toastui-editor-md-preview,
+.toastui-editor-toolbar {
+  background-color: var(--input-background-color);
+}
+
+.tagify {
+  color: var(--input-text-color);
+  background-color: var(--input-background-color);
+  border-radius: var(--input-border-radius);
+}

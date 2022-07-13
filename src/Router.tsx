@@ -6,6 +6,7 @@ import Main from "./routes/Main";
 import Profile from "./routes/Profile";
 import Home from "./routes/Home";
 import Post from "./routes/Post";
+import View from "./routes/View";
 
 interface IRouterProps {
   refreshUser: () => void;
@@ -21,12 +22,13 @@ function Router({ refreshUser, isLoggedIn, userObj }: IRouterProps) {
         {isLoggedIn ? (
           <>
             <Route path="/" element={<Main />} />
-            <Route path="/home" element={<Home />} />
             <Route
               path="/profile"
               element={<Profile refreshUser={refreshUser} userObj={userObj} />}
             />
-            <Route path="/post" element={<Post />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/home/post" element={<Post />} />
+            <Route path="/home/view" element={<View />} />
           </>
         ) : (
           <Route path="/*" element={<SignIn />} />

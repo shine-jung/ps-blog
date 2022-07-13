@@ -1,12 +1,58 @@
+import { useRef } from "react";
 import { fetchProblemInfo } from "../service/api";
-import { Box, Link, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  Container,
+  InputBase,
+  NativeSelect,
+  styled,
+  Typography,
+} from "@mui/material";
 import { useCallback, useState } from "react";
 import { INewPostContent, ITag } from "../modules/types";
 import { levels, languages } from "../commons/constants";
+import { Editor } from "@toast-ui/react-editor";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "@toast-ui/editor/dist/i18n/ko-kr";
+import "../styles/editor.css";
 import Tags from "@yaireo/tagify/dist/react.tagify";
-import "@yaireo/tagify/dist/tagify.css";
+import "../styles/tagify.css";
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  fontSize: "13px",
+  backgroundColor: alpha(theme.palette.grey[500], 0.15),
+  padding: "4px 8px",
+  borderRadius: "4px",
+}));
+const CodeInput = styled(InputBase)(({ theme }) => ({
+  color: "#222222",
+  backgroundColor: "#f9fafb",
+  fontSize: "13px",
+  fontFamily: "Open Sans, sans-serif",
+  fontWeight: "400",
+  padding: "18px 25px",
+  marginBottom: theme.spacing(2.5),
+  border: "1px solid #dadde6",
+  borderRadius: "4px",
+}));
+const Label = styled(Typography)(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
+const CustomBox = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "flex-end",
+}));
+const FormBox = styled("form")(() => ({
+  display: "flex",
+  alignItems: "flex-end",
+}));
 
 function Post() {
+  const editorRef = useRef<any>();
   const [newPostContent, setNewPostContent] = useState<INewPostContent>();
   const [problemId, setProblemId] = useState<number>();
   const onChangeFormValue = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,6 +60,13 @@ function Post() {
     setNewPostContent({
       ...newPostContent,
       [name]: value,
+    });
+  };
+  const onChangeDescription = () => {
+    const data = editorRef.current.getInstance().getHTML();
+    setNewPostContent({
+      ...newPostContent,
+      description: data,
     });
   };
   const onChangeProblemId = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,69 +99,121 @@ function Post() {
     );
   };
   const onTagChange = useCallback((event: CustomEvent) => {
-    const {
-      detail: { value },
-    } = event;
-    const tagArray = JSON.parse(value).map(
-      (tag: { value: string }) => tag.value
-    );
+    const { value } = event.detail;
+    const tagArray = value
+      ? JSON.parse(value).map((tag: { value: string }) => tag.value)
+      : [];
     setNewPostContent({
       ...newPostContent,
       tags: tagArray,
     });
   }, []);
-  console.log(newPostContent);
   return (
     <>
-      <Typography>Post</Typography>
-      <Typography>문제 번호를 입력하세요 (백준만 가능)</Typography>
-      <form onSubmit={onSubmitProblemId} id="newPost">
-        <input type="text" onChange={onChangeProblemId} />
-        <input type="submit" value="정보 불러오기" />
-      </form>
-      <Box>
-        <Box sx={{ display: "flex" }}>
-          <img
-            src={`https://static.solved.ac/tier_small/${
-              newPostContent?.level ?? 0
-            }.svg`}
-            alt={levels[newPostContent?.level ?? 0]}
-            width="30px"
+      <Container component="main" maxWidth="lg" sx={{ mt: 8, mb: 16 }}>
+        <CustomBox sx={{ mb: 0.5 }}>
+          <Box sx={{ display: "flex", ml: 1 }}>
+            <img
+              src={`https://static.solved.ac/tier_small/${
+                newPostContent?.level ?? 0
+              }.svg`}
+              alt={levels[newPostContent?.level ?? 0]}
+              width="24px"
+            />
+            <Label variant="h6" sx={{ ml: 0.5 }}>
+              {levels[newPostContent?.level ?? 0]}
+            </Label>
+          </Box>
+          <Typography sx={{ textAlign: "end" }}>
+            문제 번호를 입력하세요 (백준만 가능)
+          </Typography>
+        </CustomBox>
+        <CustomBox sx={{ mb: 2.5 }}>
+          <Box sx={{ display: "flex" }}>
+            <Label>글 제목:</Label>
+            <StyledInputBase
+              type="text"
+              value={newPostContent?.title ?? ""}
+              onChange={onChangeFormValue}
+              name="title"
+              sx={{ width: "250px", mr: 1.5 }}
+            />
+            <Label>언어:</Label>
+            <NativeSelect variant="outlined" color="success" name="language">
+              {languages.map((language) => (
+                <option key={language} value={language}>
+                  {language}
+                </option>
+              ))}
+            </NativeSelect>
+          </Box>
+          <FormBox onSubmit={onSubmitProblemId} id="newPost">
+            <StyledInputBase
+              type="text"
+              onChange={onChangeProblemId}
+              sx={{ width: "100px", mr: 1.5 }}
+            />
+            <Button type="submit" variant="contained" color="success">
+              문제 가져오기
+            </Button>
+          </FormBox>
+        </CustomBox>
+        <Box sx={{ mb: 2.5 }}>
+          <Editor
+            ref={editorRef}
+            initialValue="코드 설명을 입력하세요"
+            previewStyle="vertical"
+            height="400px"
+            initialEditType="markdown"
+            useCommandShortcut={false}
+            toolbarItems={[
+              ["heading", "bold", "italic", "strike"],
+              ["hr", "quote"],
+              ["ul", "ol", "task", "indent", "outdent"],
+              ["table", "link"],
+              ["code", "codeblock"],
+            ]}
+            language="ko-KR"
+            onChange={onChangeDescription}
           />
-          <Typography>{levels[newPostContent?.level ?? 0]}</Typography>
         </Box>
-        <input
+        <CodeInput
           type="text"
-          value={newPostContent?.title ?? ""}
+          value={newPostContent?.code ?? ""}
           onChange={onChangeFormValue}
-          name="title"
+          name="code"
+          multiline
+          rows={10}
+          placeholder="코드를 붙여넣으세요"
+          fullWidth
         />
-        <input
-          type="number"
-          value={newPostContent?.level ?? 0}
-          onChange={onChangeFormValue}
-          name="level"
-          readOnly
-        />
-        <input
-          type="url"
-          pattern="https://.*"
-          value={newPostContent?.problemUrl ?? ""}
-          onChange={onChangeFormValue}
-          name="problemUrl"
-        />
-        <Link color="inherit" href={newPostContent?.problemUrl} target="_blank">
-          문제 링크
-        </Link>
-        <select name="language">
-          {languages.map((language) => (
-            <option key={language} value={language}>
-              {language}
-            </option>
-          ))}
-        </select>
-        <Tags value={newPostContent?.tags} onChange={onTagChange} />
-      </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+          <Label>Tags:</Label>
+          <Box sx={{ width: "100%" }}>
+            <Tags value={newPostContent?.tags} onChange={onTagChange} />
+          </Box>
+        </Box>
+        <CustomBox sx={{ alignItems: "center" }}>
+          <CustomBox>
+            <Label>문제 링크:</Label>
+            <StyledInputBase
+              type="url"
+              value={newPostContent?.problemUrl ?? ""}
+              onChange={onChangeFormValue}
+              name="problemUrl"
+              sx={{ width: "300px" }}
+            />
+          </CustomBox>
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            size="large"
+          >
+            글 업로드
+          </Button>
+        </CustomBox>
+      </Container>
     </>
   );
 }
