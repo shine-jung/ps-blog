@@ -22,13 +22,14 @@ function Router({ refreshUser, isLoggedIn, userObj }: IRouterProps) {
         {isLoggedIn ? (
           <>
             <Route path="/" element={<Main />} />
+            <Route path="/view" element={<View userObj={userObj} />} />
             <Route
               path="/profile"
               element={<Profile refreshUser={refreshUser} userObj={userObj} />}
             />
             <Route path="/home" element={<Home />} />
             <Route path="/home/post" element={<Post />} />
-            <Route path="/home/view" element={<View />} />
+            <Route path="/home/view" element={<View userObj={userObj} />} />
           </>
         ) : (
           <Route path="/*" element={<SignIn />} />

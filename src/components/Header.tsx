@@ -63,7 +63,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavButton = styled(ButtonBase)(({ theme }) => ({
   display: "block",
+  backgroundColor: alpha(theme.palette.grey[500], 0.15),
   padding: "6px 8px",
+  borderRadius: "4px",
 }));
 
 interface IHeaderProps {
@@ -107,60 +109,37 @@ function Header({ userObj }: IHeaderProps) {
             >
               <CodeIcon fontSize="large" />
             </IconButton>
-            {isHome ? (
-              <>
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="div"
-                  sx={{
-                    display: { xs: "none", sm: "block" },
-                    fontFamily: "Spoqa Han Sans Neo, monospace",
-                    fontWeight: 300,
-                    userSelect: "none",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => navigate({ pathname: "/home" })}
-                >
-                  {userObj.displayName}님의 블로그
-                </Typography>
-              </>
-            ) : (
-              <>
-                <Typography
-                  variant="h5"
-                  noWrap
-                  component="div"
-                  sx={{
-                    display: { xs: "none", sm: "block" },
-                    fontFamily: "Spoqa Han Sans Neo, monospace",
-                    fontWeight: 300,
-                    letterSpacing: "0.25rem",
-                    userSelect: "none",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => navigate({ pathname: "/" })}
-                >
-                  pslog
-                </Typography>
-                <Box
-                  sx={{
-                    flexGrow: 1,
-                    display: { xs: "none", md: "flex" },
-                    ml: 2,
-                  }}
-                >
-                  <NavButton
-                    onClick={() => {
-                      navigate({ pathname: "/home" });
-                    }}
-                  >
-                    내 블로그
-                  </NavButton>
-                </Box>
-              </>
-            )}
-
+            <Typography
+              variant={isHome ? "h6" : "h5"}
+              noWrap
+              component="div"
+              sx={{
+                display: { xs: "none", sm: "block" },
+                fontFamily: "Spoqa Han Sans Neo, monospace",
+                fontWeight: 300,
+                letterSpacing: isHome ? null : "0.25rem",
+                userSelect: "none",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate({ pathname: isHome ? "/home" : "/" })}
+            >
+              {isHome ? `${userObj.displayName}님의 블로그` : "pslog"}
+            </Typography>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", md: "flex" },
+                ml: 2.5,
+              }}
+            >
+              <NavButton
+                onClick={() => {
+                  navigate({ pathname: "/home/post" });
+                }}
+              >
+                새 글 쓰기
+              </NavButton>
+            </Box>
             <Box sx={{ flexGrow: 1 }} />
             <Search>
               <SearchIconWrapper>
@@ -197,6 +176,14 @@ function Header({ userObj }: IHeaderProps) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem
+                  onClick={() => {
+                    navigate({ pathname: "/home" });
+                    handleCloseUserMenu();
+                  }}
+                >
+                  <Typography textAlign="center">내 블로그</Typography>
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     navigate({ pathname: "/profile" });

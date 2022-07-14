@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Router from "./Router";
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
 import { lightTheme, darkTheme } from "./modules/theme";
 import { useRecoilValue } from "recoil";
@@ -9,21 +9,17 @@ import { CssBaseline } from "@mui/material";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { auth } from "./service/firebase";
 import { IUserObj, IUserUpdateArgs } from "./modules/types";
+import { Loader } from "./components/customComponents";
 
 const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
-    color:inherit;
+    color: inherit;
   }
-`;
-
-const Loader = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 300;
+  .heart-icon {
+    color: #ff6666;
+    margin-right: 5px;
+  }
 `;
 
 function App() {

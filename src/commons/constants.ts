@@ -32,4 +32,12 @@ export const levels = [
   "Ruby I",
 ];
 
-export const languages = ["cpp", "c", "python", "java", "javascript", "기타"];
+export const languages = [
+  "선택",
+  "cpp",
+  "c",
+  "python",
+  "java",
+  "javascript",
+  "기타",
+];

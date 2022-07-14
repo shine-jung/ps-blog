@@ -91,52 +91,50 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     }
   };
   return (
-    <>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: "20vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography>Profile</Typography>
-          <Typography>{userObj?.email}</Typography>
-          <Typography>{userObj?.displayName}</Typography>
-          <img
-            alt={userObj?.displayName ?? "이름"}
-            src={typeof newImgDir === "string" ? newImgDir : undefined}
-            width="100px"
-            height="100px"
-          />
-          <div>
-            <form onSubmit={onSubmitProfileImg}>
-              <input
-                type="file"
-                accept="image/x-png, image/gif, image/jpeg"
-                onChange={onChangeProfileImg}
-              />
-              <input type="submit" value="프로필 사진 변경" />
-            </form>
-            {isImgUpdateLoading ? "업데이트 중" : "업데이트 중 아님"}
-          </div>
-          <div>
-            <form onSubmit={onSubmitProfileName}>
-              <input
-                onChange={onChangeProfileName}
-                type="text"
-                autoFocus
-                placeholder="Display name"
-                value={newDisplayName ?? ""}
-              />
-              <input type="submit" value="닉네임 변경" />
-            </form>
-          </div>
-          <button onClick={onClickDeleteBtn}>계정 삭제</button>
-        </Box>
-      </Container>
-    </>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: "20vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography>Profile</Typography>
+        <Typography>{userObj?.email}</Typography>
+        <Typography>{userObj?.displayName}</Typography>
+        <img
+          alt={userObj?.displayName ?? "이름"}
+          src={typeof newImgDir === "string" ? newImgDir : undefined}
+          width="100px"
+          height="100px"
+        />
+        <div>
+          <form onSubmit={onSubmitProfileImg}>
+            <input
+              type="file"
+              accept="image/x-png, image/gif, image/jpeg"
+              onChange={onChangeProfileImg}
+            />
+            <input type="submit" value="프로필 사진 변경" />
+          </form>
+          {isImgUpdateLoading ? "업데이트 중" : "업데이트 중 아님"}
+        </div>
+        <div>
+          <form onSubmit={onSubmitProfileName}>
+            <input
+              onChange={onChangeProfileName}
+              type="text"
+              autoFocus
+              placeholder="Display name"
+              value={newDisplayName ?? ""}
+            />
+            <input type="submit" value="닉네임 변경" />
+          </form>
+        </div>
+        <button onClick={onClickDeleteBtn}>계정 삭제</button>
+      </Box>
+    </Container>
   );
 }
 

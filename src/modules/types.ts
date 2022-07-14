@@ -20,16 +20,19 @@ export interface INewPostContent {
   problemUrl?: string;
 }
 export interface IPostContent {
-  postId: number;
-  title: string;
-  description: string;
-  code: string;
-  language: string;
-  level: number;
-  uploadTime: Date;
-  lastUpdatedTime: Date;
-  tags: string[];
-  problemUrl: string;
+  postId?: string;
+  userId?: string;
+  title?: string;
+  description?: string;
+  code?: string;
+  language?: string;
+  level?: number;
+  uploadTime?: Date;
+  lastUpdatedTime?: Date;
+  tags?: string[];
+  problemUrl?: string;
+  likes?: number;
+  comments?: number;
 }
 
 export interface ITitle {
