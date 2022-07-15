@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProblemInfo } from "../service/api";
 import { addDoc, collection } from "firebase/firestore";
@@ -10,22 +10,20 @@ import {
   NativeSelect,
   Typography,
 } from "@mui/material";
-import { useCallback, useState } from "react";
-import { INewPostContent, ITag } from "../modules/types";
-import { levels, languages } from "../commons/constants";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "@toast-ui/editor/dist/i18n/ko-kr";
-import "../styles/editor.css";
-import Tags from "@yaireo/tagify/dist/react.tagify";
-import "../styles/tagify.css";
 import {
   StyledInputBase,
   CodeInput,
   Label,
   CustomBox,
   FormBox,
-} from "../components/customComponents";
+} from "../components/styledComponents";
+import { INewPostContent, ITag } from "../modules/types";
+import { levels, languages } from "../commons/constants";
+import { Editor } from "@toast-ui/react-editor";
+import "../styles/editor.css";
+import "@toast-ui/editor/dist/i18n/ko-kr";
+import Tags from "@yaireo/tagify/dist/react.tagify";
+import "../styles/tagify.css";
 
 function Post() {
   const navigate = useNavigate();
@@ -118,7 +116,7 @@ function Post() {
     );
   };
   return (
-    <Container component="main" maxWidth="lg" sx={{ mt: 8, mb: 16 }}>
+    <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 16 }}>
       <CustomBox sx={{ mb: 0.5 }}>
         <Box sx={{ display: "flex", ml: 1 }}>
           <img
@@ -151,7 +149,7 @@ function Post() {
             value={newPostContent?.language}
             variant="outlined"
             onChange={onChangeLanguage}
-            color="success"
+            color="primary"
             name="language"
           >
             {languages.map((language) => (
@@ -167,7 +165,7 @@ function Post() {
             onChange={onChangeProblemId}
             sx={{ width: "100px", mr: 1.5 }}
           />
-          <Button type="submit" variant="contained" color="success">
+          <Button type="submit" variant="contained" color="primary">
             문제 가져오기
           </Button>
         </FormBox>
@@ -175,10 +173,10 @@ function Post() {
       <Box sx={{ mb: 2.5 }}>
         <Editor
           ref={editorRef}
-          initialValue="코드 설명을 입력하세요"
+          initialValue="여기에 코드 설명을 입력하세요"
           previewStyle="vertical"
           height="400px"
-          initialEditType="markdown"
+          initialEditType="wysiwyg"
           useCommandShortcut={false}
           toolbarItems={[
             ["heading", "bold", "italic", "strike"],
@@ -198,7 +196,7 @@ function Post() {
         name="code"
         multiline
         rows={10}
-        placeholder="코드를 붙여넣으세요"
+        placeholder="여기에 코드를 붙여넣으세요"
         fullWidth
       />
       <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
@@ -215,13 +213,13 @@ function Post() {
             value={newPostContent?.problemUrl ?? ""}
             onChange={onChangeFormValue}
             name="problemUrl"
-            sx={{ width: "300px" }}
+            sx={{ width: "350px" }}
           />
         </CustomBox>
         <Button
           onClick={onPostBtnClick}
           variant="contained"
-          color="success"
+          color="primary"
           size="large"
         >
           글 업로드

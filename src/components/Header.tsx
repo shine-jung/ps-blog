@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IUserObj } from "../modules/types";
 import {
-  AppBar,
   Box,
   Toolbar,
   IconButton,
@@ -21,6 +20,33 @@ import CodeIcon from "@mui/icons-material/Code";
 import SearchIcon from "@mui/icons-material/Search";
 import { logout } from "../service/auth";
 import LightDarkToggle from "./LightDarkToggle";
+
+const AppBar = styled("header")(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  display: "flex",
+  justifyContent: "center",
+  top: "0",
+  zIndex: "50",
+  position: "fixed",
+  width: "100%",
+  height: "56px",
+  boxShadow: "0 1px 3px 0 rgb(0 0 0/0.1), 0 1px 2px -1px rgb(0 0 0/0.1)",
+  "&.visible": {
+    top: "0",
+    transition: "top 0.4s ease-out",
+  },
+  "&.hidden": {
+    top: "-56px",
+    transition: "top 0.4s ease-out",
+  },
+  [theme.breakpoints.up("sm")]: {
+    height: "64px",
+    "&.hidden": {
+      top: "-64px",
+      transition: "top 0.4s ease-out",
+    },
+  },
+}));
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -91,15 +117,24 @@ function Header({ userObj }: IHeaderProps) {
     handleCloseUserMenu();
   };
 
+  const [position, setPosition] = useState(window.pageYOffset);
+  const [visible, setVisible] = useState(true);
+  const cls = visible ? "visible" : "hidden";
+  useEffect(() => {
+    const handleScroll = () => {
+      let moving = window.pageYOffset;
+      setVisible(position > moving);
+      setPosition(moving);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
+
   return (
     <Box sx={{ height: { xs: "56px", sm: "64px" }, flexGrow: 1 }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          boxShadow:
-            "0 1px 3px 0 rgb(0 0 0/0.1), 0 1px 2px -1px rgb(0 0 0/0.1)",
-        }}
-      >
+      <AppBar className={cls}>
         <Container maxWidth="lg">
           <Toolbar disableGutters>
             <IconButton

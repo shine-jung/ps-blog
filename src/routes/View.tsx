@@ -3,19 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { IPostContent, IUserObj } from "../modules/types";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../service/firebase";
-import { Box, Container, IconButton, Link, Tooltip } from "@mui/material";
-import {
-  Label,
-  CustomBox,
-  Loader,
-  DescriptionBox,
-} from "../components/customComponents";
+import { Box, Container, IconButton, Link, Tooltip, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Label, CustomBox, Loader } from "../components/styledComponents";
 import { levels } from "../commons/constants";
-import { Viewer } from "@toast-ui/react-editor";
-import { CodeBlock, paraisoLight } from "react-code-blocks";
-import "@toast-ui/editor/dist/toastui-editor-viewer.css";
-import "../styles/editor.css";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ViewDescription from "../components/ViewDescription";
+import ViewCode from "../components/ViewCode";
 
 interface RouteState {
   state: {
@@ -31,6 +25,10 @@ function View({ userObj }: IViewProps) {
   const navigate = useNavigate();
   const { state } = useLocation() as RouteState;
   const [postContent, setPostContent] = useState<IPostContent>();
+  const [tabValue, setTabValue] = useState("1");
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setTabValue(newValue);
+  };
   const removePost = async (postId: string | null) => {
     if (!postId) return;
     await deleteDoc(doc(db, "posts", postId));
@@ -43,7 +41,7 @@ function View({ userObj }: IViewProps) {
   return (
     <>
       {postContent ? (
-        <Container component="main" maxWidth="lg" sx={{ mt: 8, mb: 16 }}>
+        <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 16 }}>
           <CustomBox sx={{ mb: 0.5 }}>
             <Box sx={{ display: "flex", ml: 1 }}>
               <img
@@ -62,27 +60,34 @@ function View({ userObj }: IViewProps) {
             <Label variant="h4">{postContent.title}</Label>
             <Label variant="h5">{postContent.language}</Label>
           </CustomBox>
-          <Link
-            sx={{ m: 1 }}
-            color="inherit"
-            href={postContent.problemUrl}
-            target="_blank"
-          >
-            문제 링크
-          </Link>
-          <Label variant="h6">설명</Label>
-          <DescriptionBox>
-            <Viewer initialValue={postContent.description} />
-          </DescriptionBox>
-          <Box sx={{ mb: 2.5 }}>
-            <Label variant="h6">코드</Label>
-            <CodeBlock
-              text={postContent.code?.replaceAll("&nbsp;", " ") ?? ""}
-              language={postContent.language ?? "cpp"}
-              showLineNumbers={true}
-              startingLineNumber={1}
-              theme={paraisoLight}
-            />
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Link
+              sx={{ p: 1 }}
+              color="primary"
+              href={postContent.problemUrl}
+              target="_blank"
+            >
+              문제 링크
+            </Link>
+          </Box>
+          <Box minHeight="300px">
+            <TabContext value={tabValue}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList onChange={handleTabChange} textColor="primary">
+                  <Tab label="설명" value="1" />
+                  <Tab label="코드" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                <ViewDescription description={postContent.description} />
+              </TabPanel>
+              <TabPanel value="2">
+                <ViewCode
+                  code={postContent.code}
+                  language={postContent.language}
+                />
+              </TabPanel>
+            </TabContext>
           </Box>
           <Label>Tags: {postContent.tags?.join(", ")}</Label>
           {userObj?.uid === postContent.userId && (

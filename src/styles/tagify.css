@@ -5,6 +5,9 @@
   --tagify-dd-item-pad: 0.3em 0.5em;
 }
 .tagify {
+  --tag-text-color: #222222;
+  --tag-background-color: #f9fafb;
+  --tag-border-radius: 4px;
   --tags-disabled-bg: #f1f1f1;
   --tags-border-color: #dadde6;
   --tags-hover-border-color: #dadde6;
@@ -32,6 +35,9 @@
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
+  color: var(--tag-text-color);
+  background-color: var(--tag-background-color);
+  border-radius: var(--tag-border-radius);
   border: 1px solid var(--tags-border-color);
   padding: 0;
   line-height: 0;

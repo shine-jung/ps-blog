@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
-import { PaperOne, CustomBox } from "./customComponents";
+import { PaperOne, CustomBox } from "./styledComponents";
 import { levels } from "../commons/constants";
 import { IPostContent } from "../modules/types";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -46,8 +46,17 @@ function PostCard({ postContent }: IPostCardProps) {
           </Typography>
           <CustomBox>
             <Typography>by 작성자</Typography>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <FontAwesomeIcon icon={faHeart} className="heart-icon" />
+            <Box
+              sx={{
+                width: "35px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ color: "#ff6666" }}>
+                <FontAwesomeIcon icon={faHeart} />
+              </Box>
               {postContent.likes}
             </Box>
           </CustomBox>

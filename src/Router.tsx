@@ -7,6 +7,7 @@ import Profile from "./routes/Profile";
 import Home from "./routes/Home";
 import Post from "./routes/Post";
 import View from "./routes/View";
+import ScrollToTop from "./components/ScrollToTop";
 
 interface IRouterProps {
   refreshUser: () => void;
@@ -17,6 +18,7 @@ interface IRouterProps {
 function Router({ refreshUser, isLoggedIn, userObj }: IRouterProps) {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       {isLoggedIn && <Header userObj={userObj} />}
       <Routes>
         {isLoggedIn ? (

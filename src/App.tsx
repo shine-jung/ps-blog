@@ -9,16 +9,12 @@ import { CssBaseline } from "@mui/material";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { auth } from "./service/firebase";
 import { IUserObj, IUserUpdateArgs } from "./modules/types";
-import { Loader } from "./components/customComponents";
+import { Loader } from "./components/styledComponents";
 
 const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
     color: inherit;
-  }
-  .heart-icon {
-    color: #ff6666;
-    margin-right: 5px;
   }
 `;
 

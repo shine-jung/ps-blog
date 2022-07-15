@@ -58,7 +58,7 @@ function SignIn() {
             onClick={() => login("google")}
             fullWidth
             variant="contained"
-            color="success"
+            color="primary"
             sx={{ mb: 2 }}
           >
             <Typography sx={{ mr: 1 }}>Continue with Google</Typography>
@@ -68,7 +68,7 @@ function SignIn() {
             onClick={() => login("github")}
             fullWidth
             variant="contained"
-            color="warning"
+            color="secondary"
             sx={{ mb: 3 }}
           >
             <Typography sx={{ mr: 1 }}>Continue with Github</Typography>
