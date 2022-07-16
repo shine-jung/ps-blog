@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IUserObj } from "../modules/types";
+import { ICurrentUser } from "../modules/types";
 import {
   Box,
   Toolbar,
@@ -95,13 +95,13 @@ const NavButton = styled(ButtonBase)(({ theme }) => ({
 }));
 
 interface IHeaderProps {
-  userObj: IUserObj | null;
+  userObj: ICurrentUser | null;
 }
 
 function Header({ userObj }: IHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isHome = userObj?.displayName && location.pathname.includes("/home");
+  const isHome = userObj?.name && location.pathname.includes("/home");
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -158,7 +158,7 @@ function Header({ userObj }: IHeaderProps) {
               }}
               onClick={() => navigate({ pathname: isHome ? "/home" : "/" })}
             >
-              {isHome ? `${userObj.displayName}님의 블로그` : "pslog"}
+              {isHome ? `${userObj.name}님의 블로그` : "pslog"}
             </Typography>
             <Box
               sx={{
@@ -189,7 +189,7 @@ function Header({ userObj }: IHeaderProps) {
               <Tooltip title="메뉴 열기" arrow>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
-                    alt={userObj?.displayName ?? "이름"}
+                    alt={userObj?.name ?? "이름"}
                     src={userObj?.photoURL ?? undefined}
                     sx={{ width: 32, height: 32 }}
                   />

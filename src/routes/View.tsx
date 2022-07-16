@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IPostContent, IUserObj } from "../modules/types";
+import { IPostContent, ICurrentUser } from "../modules/types";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../service/firebase";
 import { Box, Container, IconButton, Link, Tooltip, Tab } from "@mui/material";
@@ -18,7 +18,7 @@ interface RouteState {
 }
 
 interface IViewProps {
-  userObj: IUserObj | null;
+  userObj: ICurrentUser | null;
 }
 
 function View({ userObj }: IViewProps) {
@@ -36,6 +36,10 @@ function View({ userObj }: IViewProps) {
     alert("글이 삭제되었습니다");
   };
   useEffect(() => {
+    if (!state) {
+      navigate({ pathname: "/" });
+      return;
+    }
     setPostContent(state.postContent);
   }, []);
   return (

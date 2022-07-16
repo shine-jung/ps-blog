@@ -27,7 +27,7 @@ function Copyright(props: any) {
   );
 }
 
-function SignIn() {
+function LogIn() {
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -83,4 +83,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default LogIn;

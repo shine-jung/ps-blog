@@ -8,7 +8,7 @@ interface IViewDescription {
 
 function ViewDescription({ description }: IViewDescription) {
   return (
-    <Box marginBottom={8}>
+    <Box marginTop={1} marginBottom={8}>
       <Viewer initialValue={description ?? ""} />
     </Box>
   );

@@ -1,40 +1,57 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { IUserObj } from "./modules/types";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import { ICurrentUser } from "./modules/types";
 import Header from "./components/Header";
-import SignIn from "./routes/SignIn";
+import LogIn from "./routes/LogIn";
 import Main from "./routes/Main";
 import Profile from "./routes/Profile";
 import Home from "./routes/Home";
 import Post from "./routes/Post";
 import View from "./routes/View";
+import Register from "./routes/Register";
 import ScrollToTop from "./components/ScrollToTop";
 
 interface IRouterProps {
   refreshUser: () => void;
   isLoggedIn: boolean;
-  userObj: IUserObj | null;
+  isRegistered: boolean;
+  userObj: ICurrentUser | null;
 }
 
-function Router({ refreshUser, isLoggedIn, userObj }: IRouterProps) {
+function Router({
+  refreshUser,
+  isLoggedIn,
+  isRegistered,
+  userObj,
+}: IRouterProps) {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      {isLoggedIn && <Header userObj={userObj} />}
+      {isRegistered && <Header userObj={userObj} />}
       <Routes>
         {isLoggedIn ? (
-          <>
-            <Route path="/" element={<Main />} />
-            <Route path="/view" element={<View userObj={userObj} />} />
+          isRegistered ? (
+            <>
+              <Route path="/" element={<Main />} />
+              <Route path="/view" element={<View userObj={userObj} />} />
+              <Route
+                path="/profile"
+                element={
+                  <Profile refreshUser={refreshUser} userObj={userObj} />
+                }
+              />
+              <Route path="/home" element={<Home />} />
+              <Route path="/home/post" element={<Post />} />
+              <Route path="/home/view" element={<View userObj={userObj} />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </>
+          ) : (
             <Route
-              path="/profile"
-              element={<Profile refreshUser={refreshUser} userObj={userObj} />}
+              path="/*"
+              element={<Register refreshUser={refreshUser} userObj={userObj} />}
             />
-            <Route path="/home" element={<Home />} />
-            <Route path="/home/post" element={<Post />} />
-            <Route path="/home/view" element={<View userObj={userObj} />} />
-          </>
+          )
         ) : (
-          <Route path="/*" element={<SignIn />} />
+          <Route path="/*" element={<LogIn />} />
         )}
       </Routes>
     </BrowserRouter>

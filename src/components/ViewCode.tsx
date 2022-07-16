@@ -8,7 +8,11 @@ interface IViewCode {
 
 function ViewCode({ code, language }: IViewCode) {
   return (
-    <Box marginBottom={8} sx={{ fontFamily: "D2Coding, monospace" }}>
+    <Box
+      marginTop={1}
+      marginBottom={8}
+      sx={{ fontFamily: "D2Coding, monospace" }}
+    >
       <CodeBlock
         text={code?.replaceAll("&nbsp;", " ") ?? ""}
         language={language ?? "cpp"}

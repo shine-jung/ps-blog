@@ -3,12 +3,12 @@ import { deleteUser } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Box, Container, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { IUserObj, IUserUpdateArgs } from "../modules/types";
+import { ICurrentUser, IUpdateUser } from "../modules/types";
 import { logout } from "../service/auth";
 
 interface IProfileProps {
   refreshUser: () => void;
-  userObj: IUserObj | null;
+  userObj: ICurrentUser | null;
 }
 
 function Profile({ refreshUser, userObj }: IProfileProps) {
@@ -17,9 +17,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
   const [newImgDir, setNewImgDir] = useState<string | ArrayBuffer | null>(
     userObj?.photoURL ?? null
   );
-  const [newDisplayName, setNewDisplayName] = useState<string | null>(
-    userObj?.displayName ?? null
-  );
+  const [newName, setNewName] = useState<string | null>(userObj?.name ?? null);
   const onChangeProfileImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader();
     fileReader.onload = function () {
@@ -31,7 +29,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
   };
   const onChangeProfileName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setNewDisplayName(value);
+    setNewName(value);
   };
   const onSubmitProfileImg = async (
     event: React.FormEvent<HTMLFormElement>
@@ -47,9 +45,9 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       await uploadBytes(storageRef, newImgFile);
       getDownloadURL(ref(storage, `${userObj.uid}_${newImgFile.name}`)).then(
         async (url) => {
-          await userObj?.updateProfile({
+          await userObj?.updateUser({
             photoURL: url,
-          } as IUserUpdateArgs);
+          } as IUpdateUser);
           refreshUser();
           setIsImgUpdateLoading(false);
           alert("사진 업데이트가 완료되었습니다");
@@ -61,34 +59,20 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    if (!newDisplayName) {
+    if (!newName) {
       alert("새로운 이름을 입력해주세요");
       return;
     }
-    if (userObj?.displayName !== newDisplayName) {
-      await userObj?.updateProfile({
-        displayName: newDisplayName,
-      } as IUserUpdateArgs);
+    if (userObj?.name !== newName) {
+      await userObj?.updateUser({
+        name: newName,
+      } as IUpdateUser);
       refreshUser();
       alert("이름이 업데이트 되었습니다");
     }
   };
-  const onClickDeleteBtn = () => {
-    if (!window.confirm("계정을 삭제하시겠습니까? 모든 데이터가 삭제됩니다")) {
-      alert("취소되었습니다");
-      return;
-    }
-    const user = auth.currentUser;
-    if (user) {
-      deleteUser(user)
-        .then(() => {
-          alert("계정이 삭제되었습니다");
-        })
-        .catch((error) => {
-          logout();
-          alert("인증이 만료되었습니다. 다시 로그인 후 시도해주세요");
-        });
-    }
+  const onClickDeleteBtn = async () => {
+    await userObj?.deleteUser();
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -102,9 +86,9 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       >
         <Typography>Profile</Typography>
         <Typography>{userObj?.email}</Typography>
-        <Typography>{userObj?.displayName}</Typography>
+        <Typography>{userObj?.name}</Typography>
         <img
-          alt={userObj?.displayName ?? "이름"}
+          alt={userObj?.name ?? "이름"}
           src={typeof newImgDir === "string" ? newImgDir : undefined}
           width="100px"
           height="100px"
@@ -127,7 +111,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
               type="text"
               autoFocus
               placeholder="Display name"
-              value={newDisplayName ?? ""}
+              value={newName ?? ""}
             />
             <input type="submit" value="닉네임 변경" />
           </form>

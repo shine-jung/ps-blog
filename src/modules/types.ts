@@ -1,13 +1,27 @@
-export interface IUserUpdateArgs {
-  displayName: string;
+export interface IUser {
+  uid?: string;
+  name?: string;
+  email?: string;
+  id?: string;
+  bojId?: string;
+  blogTitle?: string;
+  introduction?: string;
+  photoURL?: string;
+  isRegistered?: boolean;
+  createdTime?: Date;
+  lastLoginTime?: Date;
+}
+export interface IUpdateUser {
+  name: string;
+  email: string;
+  bojId: string;
+  blogTitle: string;
+  introduction: string;
   photoURL: string;
 }
-export interface IUserObj {
-  displayName: string | null;
-  email: string | null;
-  photoURL: string | null;
-  uid: string;
-  updateProfile: (args: IUserUpdateArgs) => Promise<void>;
+export interface ICurrentUser extends IUser {
+  updateUser: (args: IUpdateUser) => Promise<void>;
+  deleteUser: () => Promise<void>;
 }
 
 export interface INewPostContent {
@@ -18,6 +32,24 @@ export interface INewPostContent {
   level?: number;
   tags?: string[];
   problemUrl?: string;
+}
+export interface INestedComment {
+  nestedcommentId?: string;
+  nestedComment?: string;
+  userId?: string;
+  uploadTime?: Date;
+  lastUpdatedTime?: Date;
+}
+export interface IComment {
+  commentId?: string;
+  comment?: string;
+  userId?: string;
+  uploadTime?: Date;
+  lastUpdatedTime?: Date;
+  likedUsers?: string[];
+  likeCount?: number;
+  nestedComments?: INestedComment[];
+  nestedCount?: number;
 }
 export interface IPostContent {
   postId?: string;
@@ -31,8 +63,10 @@ export interface IPostContent {
   lastUpdatedTime?: Date;
   tags?: string[];
   problemUrl?: string;
-  likes?: number;
-  comments?: number;
+  likedUsers?: string[];
+  likeCount?: number;
+  comments?: IComment[];
+  commentCount?: number;
 }
 
 export interface ITitle {

@@ -6,9 +6,10 @@ import { lightTheme, darkTheme } from "./modules/theme";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./service/atoms";
 import { CssBaseline } from "@mui/material";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./service/firebase";
-import { IUserObj, IUserUpdateArgs } from "./modules/types";
+import { getCurrentUser } from "./service/user";
+import { ICurrentUser } from "./modules/types";
 import { Loader } from "./components/styledComponents";
 
 const GlobalStyle = createGlobalStyle`
@@ -21,17 +22,11 @@ const GlobalStyle = createGlobalStyle`
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
   const [init, setInit] = useState(false);
-  const [userObj, setUserObj] = useState<IUserObj | null>();
+  const [userObj, setUserObj] = useState<ICurrentUser | null>();
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUserObj({
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          uid: user.uid,
-          updateProfile: (args: IUserUpdateArgs) => updateProfile(user, args),
-        });
+        await getCurrentUser().then((userData) => setUserObj(userData));
       } else {
         setUserObj(null);
       }
@@ -39,16 +34,7 @@ function App() {
     });
   }, []);
   const refreshUser = () => {
-    const user = auth.currentUser;
-    if (user) {
-      setUserObj({
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        uid: user.uid,
-        updateProfile: (args: IUserUpdateArgs) => updateProfile(user, args),
-      });
-    }
+    getCurrentUser().then((userData) => setUserObj(userData));
   };
   return (
     <>
@@ -59,6 +45,7 @@ function App() {
           <Router
             refreshUser={refreshUser}
             isLoggedIn={Boolean(userObj)}
+            isRegistered={userObj?.isRegistered ?? false}
             userObj={userObj ?? null}
           />
         ) : (

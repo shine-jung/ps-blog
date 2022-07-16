@@ -42,7 +42,7 @@ function PostCard({ postContent }: IPostCardProps) {
         </Box>
         <Box>
           <Typography variant="subtitle2">
-            2022년 7월 6일 · {postContent.comments}개의 댓글
+            2022년 7월 6일 · {postContent.commentCount}개의 댓글
           </Typography>
           <CustomBox>
             <Typography>by 작성자</Typography>
@@ -57,7 +57,7 @@ function PostCard({ postContent }: IPostCardProps) {
               <Box sx={{ color: "#ff6666" }}>
                 <FontAwesomeIcon icon={faHeart} />
               </Box>
-              {postContent.likes}
+              {postContent.likeCount}
             </Box>
           </CustomBox>
         </Box>

@@ -33,7 +33,7 @@ export const levels = [
 ];
 
 export const languages = [
-  "선택",
+  "언어 선택",
   "cpp",
   "c",
   "python",

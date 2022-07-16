@@ -18,10 +18,11 @@ export const Loader = styled.div`
 `;
 
 export const StyledInputBase = muiStyled(InputBase)(({ theme }) => ({
+  width: "200px",
   color: "inherit",
   fontSize: "1rem",
   backgroundColor: alpha(theme.palette.grey[500], 0.15),
-  padding: "4px 8px",
+  padding: "4px 12px",
   borderRadius: "4px",
 }));
 
@@ -32,7 +33,7 @@ export const CodeInput = muiStyled(InputBase)(({ theme }) => ({
   fontFamily: "Open Sans, sans-serif",
   fontWeight: "400",
   padding: "18px 25px",
-  marginBottom: theme.spacing(2.5),
+  marginBottom: theme.spacing(3),
   border: "1px solid #dadde6",
   borderRadius: "4px",
 }));
