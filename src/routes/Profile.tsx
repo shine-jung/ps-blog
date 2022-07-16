@@ -1,14 +1,13 @@
-import { auth, storage } from "../service/firebase";
-import { deleteUser } from "firebase/auth";
+import { storage } from "../service/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Box, Container, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { ICurrentUser, IUpdateUser } from "../modules/types";
-import { logout } from "../service/auth";
+import { IUser, IUpdateUser } from "../modules/types";
+import { deleteUser, updateUser } from "../service/user";
 
 interface IProfileProps {
   refreshUser: () => void;
-  userObj: ICurrentUser | null;
+  userObj: IUser | null;
 }
 
 function Profile({ refreshUser, userObj }: IProfileProps) {
@@ -39,13 +38,14 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       alert("2MB 이하의 사진을 첨부해주세요");
       return;
     }
-    if (userObj?.uid && newImgFile?.name) {
+    if (userObj?.id && newImgFile?.name) {
       setIsImgUpdateLoading(true);
-      const storageRef = ref(storage, `${userObj.uid}_${newImgFile.name}`);
+      const storageRef = ref(storage, `${userObj.id}_${newImgFile.name}`);
       await uploadBytes(storageRef, newImgFile);
-      getDownloadURL(ref(storage, `${userObj.uid}_${newImgFile.name}`)).then(
+      getDownloadURL(ref(storage, `${userObj.id}_${newImgFile.name}`)).then(
         async (url) => {
-          await userObj?.updateUser({
+          if (!userObj.id) return;
+          await updateUser(userObj.id, {
             photoURL: url,
           } as IUpdateUser);
           refreshUser();
@@ -64,7 +64,8 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       return;
     }
     if (userObj?.name !== newName) {
-      await userObj?.updateUser({
+      if (!userObj?.id) return;
+      await updateUser(userObj.id, {
         name: newName,
       } as IUpdateUser);
       refreshUser();
@@ -72,7 +73,8 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     }
   };
   const onClickDeleteBtn = async () => {
-    await userObj?.deleteUser();
+    if (!userObj?.id) return;
+    await deleteUser(userObj.id);
   };
   return (
     <Container component="main" maxWidth="xs">

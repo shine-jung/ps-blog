@@ -1,10 +1,11 @@
 export interface IUser {
-  uid?: string;
+  authUid?: string;
   name?: string;
   email?: string;
   id?: string;
   bojId?: string;
   blogTitle?: string;
+  articleNumber?: number;
   introduction?: string;
   photoURL?: string;
   isRegistered?: boolean;
@@ -18,10 +19,6 @@ export interface IUpdateUser {
   blogTitle: string;
   introduction: string;
   photoURL: string;
-}
-export interface ICurrentUser extends IUser {
-  updateUser: (args: IUpdateUser) => Promise<void>;
-  deleteUser: () => Promise<void>;
 }
 
 export interface INewPostContent {
@@ -54,6 +51,7 @@ export interface IComment {
 export interface IPostContent {
   postId?: string;
   userId?: string;
+  authUid?: string;
   title?: string;
   description?: string;
   code?: string;

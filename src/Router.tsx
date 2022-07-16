@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import { ICurrentUser } from "./modules/types";
+import { IUser } from "./modules/types";
 import Header from "./components/Header";
 import LogIn from "./routes/LogIn";
 import Main from "./routes/Main";
@@ -14,7 +14,7 @@ interface IRouterProps {
   refreshUser: () => void;
   isLoggedIn: boolean;
   isRegistered: boolean;
-  userObj: ICurrentUser | null;
+  userObj: IUser | null;
 }
 
 function Router({
@@ -39,9 +39,12 @@ function Router({
                   <Profile refreshUser={refreshUser} userObj={userObj} />
                 }
               />
-              <Route path="/home" element={<Home />} />
-              <Route path="/home/post" element={<Post />} />
-              <Route path="/home/view" element={<View userObj={userObj} />} />
+              <Route path="/post" element={<Post userObj={userObj} />} />
+              <Route path="/@:userId/" element={<Home />} />
+              <Route
+                path="/@:userId/view"
+                element={<View userObj={userObj} />}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </>
           ) : (

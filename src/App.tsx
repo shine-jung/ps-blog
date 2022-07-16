@@ -9,7 +9,7 @@ import { CssBaseline } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./service/firebase";
 import { getCurrentUser } from "./service/user";
-import { ICurrentUser } from "./modules/types";
+import { IUser } from "./modules/types";
 import { Loader } from "./components/styledComponents";
 
 const GlobalStyle = createGlobalStyle`
@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
   const [init, setInit] = useState(false);
-  const [userObj, setUserObj] = useState<ICurrentUser | null>();
+  const [userObj, setUserObj] = useState<IUser | null>();
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {

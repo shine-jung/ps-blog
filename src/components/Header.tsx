@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ICurrentUser } from "../modules/types";
+import { IUser } from "../modules/types";
 import {
   Box,
   Toolbar,
@@ -95,13 +95,13 @@ const NavButton = styled(ButtonBase)(({ theme }) => ({
 }));
 
 interface IHeaderProps {
-  userObj: ICurrentUser | null;
+  userObj: IUser | null;
 }
 
 function Header({ userObj }: IHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isHome = userObj?.name && location.pathname.includes("/home");
+  const isHome = userObj && location.pathname.includes(`@${userObj.id}`);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -156,9 +156,11 @@ function Header({ userObj }: IHeaderProps) {
                 userSelect: "none",
                 cursor: "pointer",
               }}
-              onClick={() => navigate({ pathname: isHome ? "/home" : "/" })}
+              onClick={() =>
+                navigate({ pathname: isHome ? `/@${userObj?.id}/` : "/" })
+              }
             >
-              {isHome ? `${userObj.name}님의 블로그` : "pslog"}
+              {isHome ? userObj.blogTitle : "pslog"}
             </Typography>
             <Box
               sx={{
@@ -169,7 +171,7 @@ function Header({ userObj }: IHeaderProps) {
             >
               <NavButton
                 onClick={() => {
-                  navigate({ pathname: "/home/post" });
+                  navigate({ pathname: "/post" });
                 }}
               >
                 새 글 쓰기
@@ -213,7 +215,7 @@ function Header({ userObj }: IHeaderProps) {
               >
                 <MenuItem
                   onClick={() => {
-                    navigate({ pathname: "/home" });
+                    navigate({ pathname: `/@${userObj?.id}/` });
                     handleCloseUserMenu();
                   }}
                 >

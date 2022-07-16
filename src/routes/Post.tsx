@@ -1,8 +1,14 @@
 import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProblemInfo } from "../service/api";
-import { addDoc, collection } from "firebase/firestore";
-import { auth, db } from "../service/firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
+import { db } from "../service/firebase";
 import {
   Box,
   Button,
@@ -17,7 +23,7 @@ import {
   CustomBox,
   FormBox,
 } from "../components/styledComponents";
-import { INewPostContent, ITag } from "../modules/types";
+import { IUser, INewPostContent, ITag } from "../modules/types";
 import { levels, languages } from "../commons/constants";
 import { Editor } from "@toast-ui/react-editor";
 import "../styles/editor.css";
@@ -25,7 +31,11 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 import Tags from "@yaireo/tagify/dist/react.tagify";
 import "../styles/tagify.css";
 
-function Post() {
+interface IPostProps {
+  userObj: IUser | null;
+}
+
+function Post({ userObj }: IPostProps) {
   const navigate = useNavigate();
   const editorRef = useRef<any>();
   const [newPostContent, setNewPostContent] = useState<INewPostContent>();
@@ -89,16 +99,22 @@ function Post() {
     }
   };
   const onPostBtnClick = async () => {
-    const user = auth.currentUser;
     const postsCol = collection(db, "posts");
-    if (!(newPostContent?.title && newPostContent?.description)) {
+    if (
+      !newPostContent?.title ||
+      !newPostContent?.description ||
+      !newPostContent?.code
+    ) {
       alert("내용을 입력해주세요");
       return;
     }
+    if (!userObj?.id) return;
     await addDoc(postsCol, {
       ...newPostContent,
       tags: tags ?? [],
-      uid: user?.uid,
+      postId: userObj?.articleNumber,
+      userId: userObj?.id,
+      authUid: userObj?.authUid,
       uploadTime: new Date(),
       lastUpdatedTime: new Date(),
       likedUsers: [],
@@ -106,7 +122,11 @@ function Post() {
       comments: [],
       commentCount: 0,
     });
-    navigate({ pathname: "/home" });
+    const userRef = doc(db, "users", userObj?.id);
+    await updateDoc(userRef, {
+      articleNumber: increment(1),
+    });
+    navigate({ pathname: `/@${userObj?.id}/` });
     alert("새로운 글이 업로드 되었습니다");
   };
   const getTagsArray = (tags: ITag[] | undefined) => {

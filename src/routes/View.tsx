@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IPostContent, ICurrentUser } from "../modules/types";
+import { IPostContent, IUser } from "../modules/types";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../service/firebase";
 import { Box, Container, IconButton, Link, Tooltip, Tab } from "@mui/material";
@@ -18,7 +18,7 @@ interface RouteState {
 }
 
 interface IViewProps {
-  userObj: ICurrentUser | null;
+  userObj: IUser | null;
 }
 
 function View({ userObj }: IViewProps) {
@@ -94,7 +94,7 @@ function View({ userObj }: IViewProps) {
             </TabContext>
           </Box>
           <Label>Tags: {postContent.tags?.join(", ")}</Label>
-          {userObj?.uid === postContent.userId && (
+          {userObj?.id === postContent.userId && (
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Tooltip title="글 삭제" arrow>
                 <IconButton
