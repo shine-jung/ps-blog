@@ -112,7 +112,6 @@ function Header({ userObj }: IHeaderProps) {
   const handleClickLogoutMenu = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       logout();
-      alert("로그아웃 되었습니다");
     }
     handleCloseUserMenu();
   };
@@ -133,7 +132,7 @@ function Header({ userObj }: IHeaderProps) {
   });
 
   return (
-    <Box sx={{ height: { xs: "56px", sm: "64px" }, flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar className={cls}>
         <Container maxWidth="lg">
           <Toolbar disableGutters>
@@ -157,7 +156,7 @@ function Header({ userObj }: IHeaderProps) {
                 cursor: "pointer",
               }}
               onClick={() =>
-                navigate({ pathname: isHome ? `/@${userObj?.id}/` : "/" })
+                navigate({ pathname: isHome ? `/@${userObj?.id}` : "/" })
               }
             >
               {isHome ? userObj.blogTitle : "pslog"}
@@ -215,7 +214,7 @@ function Header({ userObj }: IHeaderProps) {
               >
                 <MenuItem
                   onClick={() => {
-                    navigate({ pathname: `/@${userObj?.id}/` });
+                    navigate({ pathname: `/@${userObj?.id}` });
                     handleCloseUserMenu();
                   }}
                 >

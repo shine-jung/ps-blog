@@ -66,7 +66,7 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
     setFormData({ name: userObj?.name, email: userObj?.email });
   }, []);
   return (
-    <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 16 }}>
+    <Container component="main" maxWidth="md" sx={{ mt: 12, mb: 16 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         환영합니다!
       </Typography>

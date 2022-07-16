@@ -52,6 +52,7 @@ export interface IPostContent {
   postId?: string;
   userId?: string;
   authUid?: string;
+  articleNumber?: number;
   title?: string;
   description?: string;
   code?: string;

@@ -32,19 +32,18 @@ function Router({
           isRegistered ? (
             <>
               <Route path="/" element={<Main />} />
-              <Route path="/view" element={<View userObj={userObj} />} />
               <Route
                 path="/profile"
                 element={
                   <Profile refreshUser={refreshUser} userObj={userObj} />
                 }
               />
-              <Route path="/post" element={<Post userObj={userObj} />} />
-              <Route path="/@:userId/" element={<Home />} />
               <Route
-                path="/@:userId/view"
-                element={<View userObj={userObj} />}
+                path="/post"
+                element={<Post refreshUser={refreshUser} userObj={userObj} />}
               />
+              <Route path="/@:userId" element={<Home />} />
+              <Route path="/@:userId/:articleNumber" element={<View />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </>
           ) : (

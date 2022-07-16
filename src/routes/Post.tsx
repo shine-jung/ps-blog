@@ -2,11 +2,11 @@ import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProblemInfo } from "../service/api";
 import {
-  addDoc,
-  collection,
   doc,
+  setDoc,
   updateDoc,
   increment,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../service/firebase";
 import {
@@ -32,10 +32,11 @@ import Tags from "@yaireo/tagify/dist/react.tagify";
 import "../styles/tagify.css";
 
 interface IPostProps {
+  refreshUser: () => void;
   userObj: IUser | null;
 }
 
-function Post({ userObj }: IPostProps) {
+function Post({ refreshUser, userObj }: IPostProps) {
   const navigate = useNavigate();
   const editorRef = useRef<any>();
   const [newPostContent, setNewPostContent] = useState<INewPostContent>();
@@ -99,7 +100,6 @@ function Post({ userObj }: IPostProps) {
     }
   };
   const onPostBtnClick = async () => {
-    const postsCol = collection(db, "posts");
     if (
       !newPostContent?.title ||
       !newPostContent?.description ||
@@ -109,24 +109,27 @@ function Post({ userObj }: IPostProps) {
       return;
     }
     if (!userObj?.id) return;
-    await addDoc(postsCol, {
+    const postId = `@${userObj.id}_${userObj.articleNumber}`;
+    await setDoc(doc(db, "posts", postId), {
       ...newPostContent,
       tags: tags ?? [],
-      postId: userObj?.articleNumber,
-      userId: userObj?.id,
-      authUid: userObj?.authUid,
-      uploadTime: new Date(),
-      lastUpdatedTime: new Date(),
+      postId: postId,
+      userId: userObj.id,
+      authUid: userObj.authUid,
+      articleNumber: userObj.articleNumber,
+      uploadTime: serverTimestamp(),
+      lastUpdatedTime: serverTimestamp(),
       likedUsers: [],
       likeCount: 0,
       comments: [],
       commentCount: 0,
     });
-    const userRef = doc(db, "users", userObj?.id);
+    const userRef = doc(db, "users", userObj.id);
     await updateDoc(userRef, {
       articleNumber: increment(1),
     });
-    navigate({ pathname: `/@${userObj?.id}/` });
+    refreshUser();
+    navigate({ pathname: `/@${userObj.id}` });
     alert("새로운 글이 업로드 되었습니다");
   };
   const getTagsArray = (tags: ITag[] | undefined) => {
@@ -138,7 +141,7 @@ function Post({ userObj }: IPostProps) {
     );
   };
   return (
-    <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 16 }}>
+    <Container component="main" maxWidth="md" sx={{ my: 16 }}>
       <CustomBox sx={{ mb: 0.5 }}>
         <Box sx={{ display: "flex", ml: 1 }}>
           <img

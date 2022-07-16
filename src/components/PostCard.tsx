@@ -11,8 +11,9 @@ interface IPostCardProps {
 }
 
 function PostCard({ postContent }: IPostCardProps) {
+  const postUrl = `/@${postContent?.userId}/${postContent?.articleNumber}`;
   return (
-    <Link to="view" state={{ postContent: postContent }}>
+    <Link to={postUrl}>
       <PaperOne
         sx={{
           minHeight: "200px",
@@ -45,7 +46,7 @@ function PostCard({ postContent }: IPostCardProps) {
             2022년 7월 6일 · {postContent.commentCount}개의 댓글
           </Typography>
           <CustomBox>
-            <Typography>by 작성자</Typography>
+            <Typography>by {postContent.userId}</Typography>
             <Box
               sx={{
                 width: "35px",
