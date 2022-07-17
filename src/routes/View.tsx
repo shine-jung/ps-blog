@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../service/user";
 import { IPostContent, IUser } from "../modules/types";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../service/firebase";
+import { auth, db } from "../service/firebase";
 import {
   Box,
   Container,
@@ -24,6 +24,7 @@ import ViewWriter from "../components/ViewWriter";
 import { getDisplayTimeByTimestamp } from "../modules/functions";
 
 function View() {
+  const user = auth.currentUser;
   const navigate = useNavigate();
   const { userId, articleNumber } = useParams();
   const [init, setInit] = useState(false);
@@ -126,7 +127,7 @@ function View() {
             <Box padding={1}>
               <ViewTags tags={postContent.tags} />
             </Box>
-            {userObj?.id === postContent.userId && (
+            {user?.uid === userObj?.authUid && (
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Tooltip title="글 삭제" arrow>
                   <IconButton

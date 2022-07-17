@@ -191,7 +191,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
                   required
                 />
               </Box>
-              <Box marginBottom={4}>
+              <Box marginBottom={3}>
                 <Typography marginBottom={1}>한 줄 소개</Typography>
                 <StyledInputBase
                   type="text"
