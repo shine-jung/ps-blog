@@ -94,16 +94,17 @@ function View() {
                 </Typography>
               )}
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Link
-                sx={{ p: 1 }}
-                color="primary"
-                href={postContent.problemUrl}
-                target="_blank"
-                rel="noopener"
-              >
-                문제 링크
-              </Link>
+            <Box p={1} display="flex" justifyContent="center">
+              {postContent.problemUrl && (
+                <Link
+                  color="primary"
+                  href={postContent.problemUrl}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  문제 링크
+                </Link>
+              )}
             </Box>
             <Box minHeight={350}>
               <TabContext value={tabValue}>
