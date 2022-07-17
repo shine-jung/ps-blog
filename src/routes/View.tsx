@@ -67,25 +67,23 @@ function View() {
       {isVaild ? (
         init && postContent ? (
           <Container component="main" maxWidth="md" sx={{ my: 16 }}>
-            {postContent.level && (
-              <CustomBox sx={{ mb: 0.5 }}>
-                <Box sx={{ display: "flex", ml: 1 }}>
-                  <img
-                    src={`https://static.solved.ac/tier_small/${postContent.level}.svg`}
-                    alt={levels[postContent.level]}
-                    width="24px"
-                  />
-                  <Label variant="h6" sx={{ ml: 0.5 }}>
-                    {levels[postContent.level]}
-                  </Label>
-                </Box>
-              </CustomBox>
-            )}
+            <Box display="flex" ml={1}>
+              <img
+                src={`https://static.solved.ac/tier_small/${
+                  postContent.level ? postContent.level : "sprout"
+                }.svg`}
+                alt={levels[postContent.level ?? 0]}
+                width="24px"
+              />
+              <Label variant="h6" sx={{ ml: 0.5 }}>
+                {levels[postContent.level ?? 0]}
+              </Label>
+            </Box>
             <CustomBox sx={{ mb: 1.5 }}>
               <Label variant="h4">{postContent.title}</Label>
               <Label variant="h5">{postContent.language}</Label>
             </CustomBox>
-            <Box display="flex" px={1} mb={1}>
+            <Box display="flex" px={1} mb={2}>
               <ViewWriter userObj={userObj ?? null} userId={userObj?.id} />
               {postContent.uploadTime && (
                 <Typography sx={{ fontWeight: "300" }}>
@@ -94,8 +92,8 @@ function View() {
                 </Typography>
               )}
             </Box>
-            <Box p={1} display="flex" justifyContent="center">
-              {postContent.problemUrl && (
+            {postContent.problemUrl && (
+              <Box mb={1} display="flex" justifyContent="center">
                 <Link
                   color="primary"
                   href={postContent.problemUrl}
@@ -104,8 +102,8 @@ function View() {
                 >
                   문제 링크
                 </Link>
-              )}
-            </Box>
+              </Box>
+            )}
             <Box minHeight={350}>
               <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

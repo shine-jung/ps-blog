@@ -39,18 +39,18 @@ function PostCard({ postContent }: IPostCardProps) {
         >
           <Box>
             <CustomBox sx={{ alignItems: "flex-start", height: "100%" }}>
-              {postContent.level && (
-                <Box sx={{ display: "flex" }}>
-                  <img
-                    src={`https://static.solved.ac/tier_small/${postContent.level}.svg`}
-                    alt={levels[postContent.level]}
-                    width="20px"
-                  />
-                  <Typography sx={{ ml: 1 }}>
-                    {levels[postContent.level]}
-                  </Typography>
-                </Box>
-              )}
+              <Box sx={{ display: "flex" }}>
+                <img
+                  src={`https://static.solved.ac/tier_small/${
+                    postContent.level ? postContent.level : "sprout"
+                  }.svg`}
+                  alt={levels[postContent.level ?? 0]}
+                  width="20px"
+                />
+                <Typography sx={{ ml: 1 }}>
+                  {levels[postContent.level ?? 0]}
+                </Typography>
+              </Box>
               <Typography>{postContent.language}</Typography>
             </CustomBox>
             <Typography variant="h6">{postContent.title}</Typography>
