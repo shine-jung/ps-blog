@@ -42,7 +42,7 @@ function Home() {
       {isVaild ? (
         init && userObj ? (
           <Container component="main" maxWidth="md" sx={{ my: 16 }}>
-            <Box display="flex" padding={4} alignItems="center">
+            <Box display="flex" mx={4} alignItems="center">
               <Avatar
                 alt={userObj.name}
                 src={userObj.photoURL}
@@ -55,7 +55,7 @@ function Home() {
                 <Typography fontSize={18}>{userObj.introduction}</Typography>
               </Box>
             </Box>
-            <Divider sx={{ mx: 4, mb: 8 }} />
+            <Divider sx={{ mx: 4, mt: 6, mb: 8 }} />
             <PostList postContents={postContents} maxColum={2} />
           </Container>
         ) : (

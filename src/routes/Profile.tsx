@@ -1,22 +1,46 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { storage } from "../service/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { Box, Container, Typography } from "@mui/material";
-import React, { useState } from "react";
+import {
+  Box,
+  Container,
+  Button,
+  Typography,
+  Avatar,
+  Divider,
+} from "@mui/material";
 import { IUser, IUpdateUser } from "../modules/types";
-import { deleteUser, updateUser } from "../service/user";
+import { updateUser, deleteUser } from "../service/user";
+import { StyledInputBase } from "../components/styledComponents";
 
 interface IProfileProps {
   refreshUser: () => void;
   userObj: IUser | null;
 }
 
+interface IFormData {
+  name?: string;
+  email?: string;
+  bojId?: string;
+  blogTitle?: string;
+  introduction?: string;
+}
+
 function Profile({ refreshUser, userObj }: IProfileProps) {
+  const navigate = useNavigate();
   const [isImgUpdateLoading, setIsImgUpdateLoading] = useState(false);
   const [newImgFile, setNewImgFile] = useState<File | null>(null);
   const [newImgDir, setNewImgDir] = useState<string | ArrayBuffer | null>(
     userObj?.photoURL ?? null
   );
-  const [newName, setNewName] = useState<string | null>(userObj?.name ?? null);
+  const [formData, setFormData] = useState<IFormData>({
+    name: userObj?.name,
+    email: userObj?.email,
+    bojId: userObj?.bojId,
+    blogTitle: userObj?.blogTitle,
+    introduction: userObj?.introduction,
+  });
   const onChangeProfileImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader();
     fileReader.onload = function () {
@@ -26,9 +50,12 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     setNewImgFile(files ? files[0] : null);
     if (files) fileReader.readAsDataURL(files[0]);
   };
-  const onChangeProfileName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setNewName(value);
+  const onChangeFormData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
   const onSubmitProfileImg = async (
     event: React.FormEvent<HTMLFormElement>
@@ -50,77 +77,152 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
           } as IUpdateUser);
           refreshUser();
           setIsImgUpdateLoading(false);
-          alert("사진 업데이트가 완료되었습니다");
+          alert("프로필 사진 변경이 완료되었습니다");
         }
       );
     }
   };
-  const onSubmitProfileName = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const onSubmitFormData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!newName) {
-      alert("새로운 이름을 입력해주세요");
-      return;
-    }
-    if (userObj?.name !== newName) {
-      if (!userObj?.id) return;
-      await updateUser(userObj.id, {
-        name: newName,
-      } as IUpdateUser);
-      refreshUser();
-      alert("이름이 업데이트 되었습니다");
-    }
+    if (!userObj?.id) return;
+    await updateUser(userObj.id, {
+      ...formData,
+    } as IUpdateUser);
+    refreshUser();
+    navigate({ pathname: `/@${userObj.id}` });
+    alert("프로필이 업데이트 되었습니다");
   };
   const onClickDeleteBtn = async () => {
     if (!userObj?.id) return;
-    await deleteUser(userObj.id);
+    await deleteUser(userObj);
   };
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: "20vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography>Profile</Typography>
-        <Typography>{userObj?.email}</Typography>
-        <Typography>{userObj?.name}</Typography>
-        <img
-          alt={userObj?.name ?? "이름"}
-          src={typeof newImgDir === "string" ? newImgDir : undefined}
-          width="100px"
-          height="100px"
-        />
-        <div>
-          <form onSubmit={onSubmitProfileImg}>
-            <input
-              type="file"
-              accept="image/x-png, image/gif, image/jpeg"
-              onChange={onChangeProfileImg}
-            />
-            <input type="submit" value="프로필 사진 변경" />
-          </form>
-          {isImgUpdateLoading ? "업데이트 중" : "업데이트 중 아님"}
-        </div>
-        <div>
-          <form onSubmit={onSubmitProfileName}>
-            <input
-              onChange={onChangeProfileName}
-              type="text"
-              autoFocus
-              placeholder="Display name"
-              value={newName ?? ""}
-            />
-            <input type="submit" value="닉네임 변경" />
-          </form>
-        </div>
-        <button onClick={onClickDeleteBtn}>계정 삭제</button>
-      </Box>
-    </Container>
+    <>
+      {userObj && (
+        <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+          <Typography variant="h4" sx={{ mb: 3 }}>
+            Profile
+          </Typography>
+          <Box px={4} pt={4}>
+            <Box display="flex" alignItems="center">
+              <Avatar
+                alt={userObj.name}
+                src={typeof newImgDir === "string" ? newImgDir : undefined}
+                sx={{ width: 100, height: 100 }}
+              />
+              <Box ml={4}>
+                <div>
+                  <form onSubmit={onSubmitProfileImg}>
+                    <Box mb={1}>
+                      <Button
+                        variant="outlined"
+                        component="label"
+                        disabled={isImgUpdateLoading}
+                      >
+                        사진 선택
+                        <input
+                          type="file"
+                          accept="image/x-png, image/gif, image/jpeg"
+                          onChange={onChangeProfileImg}
+                          hidden
+                        />
+                      </Button>
+                    </Box>
+                    <Button
+                      type={isImgUpdateLoading ? undefined : "submit"}
+                      variant="contained"
+                      disabled={isImgUpdateLoading}
+                    >
+                      프로필 사진 변경
+                    </Button>
+                  </form>
+                </div>
+              </Box>
+            </Box>
+            <Divider sx={{ my: 4 }} />
+            <form onSubmit={onSubmitFormData}>
+              <Box marginBottom={2}>
+                <Typography marginBottom={1}>이름</Typography>
+                <StyledInputBase
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={onChangeFormData}
+                  required
+                />
+              </Box>
+              <Box marginBottom={2}>
+                <Typography marginBottom={1}>이메일</Typography>
+                <StyledInputBase
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  sx={{ width: 300 }}
+                  onChange={onChangeFormData}
+                  required
+                />
+              </Box>
+              <Box marginBottom={2}>
+                <Typography marginBottom={1}>아이디</Typography>
+                <StyledInputBase
+                  type="text"
+                  name="id"
+                  value={userObj.id}
+                  disabled
+                />
+              </Box>
+              <Box marginBottom={2}>
+                <Typography marginBottom={1}>백준 아이디 (선택)</Typography>
+                <StyledInputBase
+                  type="text"
+                  name="bojId"
+                  value={formData.bojId}
+                  onChange={onChangeFormData}
+                />
+              </Box>
+              <Box marginBottom={2}>
+                <Typography marginBottom={1}>블로그 제목</Typography>
+                <StyledInputBase
+                  type="text"
+                  name="blogTitle"
+                  value={formData.blogTitle}
+                  sx={{ width: 400 }}
+                  onChange={onChangeFormData}
+                  required
+                />
+              </Box>
+              <Box marginBottom={4}>
+                <Typography marginBottom={1}>한 줄 소개</Typography>
+                <StyledInputBase
+                  type="text"
+                  name="introduction"
+                  value={formData.introduction}
+                  sx={{ width: 400 }}
+                  onChange={onChangeFormData}
+                  required
+                />
+              </Box>
+              <Button
+                type="submit"
+                variant="outlined"
+                color="primary"
+                sx={{ mr: 2 }}
+              >
+                프로필 수정
+              </Button>
+            </form>
+            <Divider sx={{ my: 4 }} />
+            <Typography sx={{ mb: 1 }}>회원 탈퇴</Typography>
+            <Button variant="outlined" color="error" onClick={onClickDeleteBtn}>
+              계정 삭제
+            </Button>
+            <Typography sx={{ mt: 1 }}>
+              주의! 모든 정보가 사라지며 복구되지 않습니다.
+            </Typography>
+          </Box>
+        </Container>
+      )}
+    </>
   );
 }
 

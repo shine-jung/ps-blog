@@ -28,7 +28,7 @@ function PostList({ postContents, maxColum }: IPostListProps) {
               </Grid>
             ))}
           </Grid>
-          <Box pt={4} pb={3} px={2}>
+          <Box mt={4} mb={3} mx={2}>
             페이지 당 표시할 게시물 수&nbsp;&nbsp;&nbsp;&nbsp;
             <NativeSelect
               value={limit}

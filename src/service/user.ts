@@ -7,7 +7,7 @@ import {
   deleteDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { IUpdateUser } from "../modules/types";
+import { IUpdateUser, IUser } from "../modules/types";
 import { auth, db } from "../service/firebase";
 import { logout } from "./auth";
 
@@ -38,14 +38,18 @@ export const updateUser = async (id: string, args: IUpdateUser) => {
   });
 };
 
-export const deleteUser = async (id: string) => {
-  const user = auth.currentUser;
-  if (!user) return;
-  const authRef = doc(db, "users", user.uid);
-  const userRef = doc(db, "users", id);
+export const deleteUser = async (user: IUser) => {
+  if (!user.authUid || !user.id || !user.articleNumber) return;
   if (!window.confirm("계정을 삭제하시겠습니까? 모든 데이터가 삭제됩니다")) {
     alert("취소되었습니다");
     return;
+  }
+  const authRef = doc(db, "users", user.authUid);
+  const userRef = doc(db, "users", user.id);
+  for (let i = 0; i < user.articleNumber; i++) {
+    const docRef = doc(db, "posts", `@${user.id}_${i}`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) await deleteDoc(docRef);
   }
   await deleteDoc(authRef);
   await deleteDoc(userRef);
