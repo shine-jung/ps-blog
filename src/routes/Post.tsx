@@ -143,10 +143,10 @@ function Post({ refreshUser, userObj }: IPostProps) {
   return (
     <Container component="main" maxWidth="md" sx={{ my: 16 }}>
       <CustomBox sx={{ mb: 0.5 }}>
-        <Box sx={{ display: "flex", ml: 1 }}>
+        <Box display="flex" ml={1}>
           <img
             src={`https://static.solved.ac/tier_small/${
-              newPostContent?.level ?? 0
+              newPostContent?.level ? newPostContent?.level : "sprout"
             }.svg`}
             alt={levels[newPostContent?.level ?? 0]}
             width="24px"
