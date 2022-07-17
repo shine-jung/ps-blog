@@ -5,8 +5,15 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../service/firebase";
 import { IPostContent, IUser } from "../modules/types";
 import PostList from "../components/PostList";
-import { Container, Box, Typography, Divider, Avatar } from "@mui/material";
-import { Loader } from "../components/styledComponents";
+import {
+  Container,
+  Box,
+  Typography,
+  Divider,
+  Avatar,
+  Link,
+} from "@mui/material";
+import { CustomBox, Loader } from "../components/styledComponents";
 
 function Home() {
   const { userId } = useParams();
@@ -42,19 +49,32 @@ function Home() {
       {isVaild ? (
         init && userObj ? (
           <Container component="main" maxWidth="md" sx={{ my: 16 }}>
-            <Box display="flex" mx={4} alignItems="center">
-              <Avatar
-                alt={userObj.name}
-                src={userObj.photoURL}
-                sx={{ width: 128, height: 128 }}
-              />
-              <Box ml={4}>
-                <Typography fontSize={24} fontWeight={600} sx={{ mb: 0.5 }}>
-                  {userObj.blogTitle}
-                </Typography>
-                <Typography fontSize={18}>{userObj.introduction}</Typography>
+            <CustomBox mx={4} alignItems="center">
+              <Box display="flex" alignItems="center">
+                <Avatar
+                  alt={userObj.name}
+                  src={userObj.photoURL}
+                  sx={{ width: 128, height: 128 }}
+                />
+                <Box ml={4}>
+                  <Typography fontSize={24} fontWeight={600} sx={{ mb: 0.5 }}>
+                    {userObj.blogTitle}
+                  </Typography>
+                  <Typography fontSize={18}>{userObj.introduction}</Typography>
+                </Box>
               </Box>
-            </Box>
+              {userObj.bojId && (
+                <Link
+                  href={`https://www.acmicpc.net/user/${userObj.bojId}`}
+                  color="#2A7FB9"
+                  underline="hover"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  /&lt;&gt; 백준 프로필
+                </Link>
+              )}
+            </CustomBox>
             <Divider sx={{ mx: 4, mt: 6, mb: 8 }} />
             <PostList postContents={postContents} maxColum={2} />
           </Container>

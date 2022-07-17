@@ -18,6 +18,7 @@ function Copyright(props: any) {
         color="inherit"
         href="https://github.com/shine-jung"
         target="_blank"
+        rel="noopener"
       >
         shine-jung
       </Link>{" "}

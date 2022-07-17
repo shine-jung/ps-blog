@@ -37,8 +37,8 @@ function View() {
   const removePost = async (postId: string | null) => {
     if (!postId) return;
     await deleteDoc(doc(db, "posts", postId));
-    alert("글이 삭제되었습니다");
     navigate({ pathname: `/@${userId}` });
+    alert("글이 삭제되었습니다");
   };
   useEffect(() => {
     const getPostContent = async () => {
@@ -99,6 +99,7 @@ function View() {
                 color="primary"
                 href={postContent.problemUrl}
                 target="_blank"
+                rel="noopener"
               >
                 문제 링크
               </Link>
@@ -106,7 +107,7 @@ function View() {
             <Box minHeight={350}>
               <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <TabList onChange={handleTabChange} textColor="primary">
+                  <TabList onChange={handleTabChange}>
                     <Tab label="설명" value="1" />
                     <Tab label="코드" value="2" />
                   </TabList>
