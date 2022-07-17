@@ -21,6 +21,7 @@ function PostList({ postContents, maxColum }: IPostListProps) {
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 1, sm: 2, md: maxColum }}
+            minHeight={350}
           >
             {postContents.slice(offset, offset + limit).map((postContent) => (
               <Grid item xs={1} sm={1} md={1} key={postContent.postId}>

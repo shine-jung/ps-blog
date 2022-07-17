@@ -103,7 +103,7 @@ function View() {
                 문제 링크
               </Link>
             </Box>
-            <Box minHeight="300px">
+            <Box minHeight={350}>
               <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <TabList onChange={handleTabChange} textColor="primary">
