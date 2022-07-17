@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IUser } from "../modules/types";
 import {
   Box,
@@ -50,7 +50,7 @@ const AppBar = styled("header")(({ theme }) => ({
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: 4,
   backgroundColor: alpha(theme.palette.grey[500], 0.15),
   "&:hover": {
     backgroundColor: alpha(theme.palette.grey[500], 0.25),
@@ -100,8 +100,6 @@ interface IHeaderProps {
 
 function Header({ userObj }: IHeaderProps) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isHome = userObj && location.pathname.includes(`@${userObj.id}`);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -144,22 +142,20 @@ function Header({ userObj }: IHeaderProps) {
               <CodeIcon fontSize="large" />
             </IconButton>
             <Typography
-              variant={isHome ? "h6" : "h5"}
+              variant="h5"
               noWrap
               component="div"
               sx={{
                 display: { xs: "none", sm: "block" },
                 fontFamily: "Spoqa Han Sans Neo, monospace",
                 fontWeight: 300,
-                letterSpacing: isHome ? null : "0.25rem",
+                letterSpacing: "0.25rem",
                 userSelect: "none",
                 cursor: "pointer",
               }}
-              onClick={() =>
-                navigate({ pathname: isHome ? `/@${userObj?.id}` : "/" })
-              }
+              onClick={() => navigate({ pathname: "/" })}
             >
-              {isHome ? userObj.blogTitle : "pslog"}
+              pslog
             </Typography>
             <Box
               sx={{
@@ -190,8 +186,8 @@ function Header({ userObj }: IHeaderProps) {
               <Tooltip title="메뉴 열기" arrow>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
-                    alt={userObj?.name ?? "이름"}
-                    src={userObj?.photoURL ?? undefined}
+                    alt={userObj?.name}
+                    src={userObj?.photoURL}
                     sx={{ width: 32, height: 32 }}
                   />
                 </IconButton>

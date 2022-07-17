@@ -1,69 +1,91 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getUser } from "../service/user";
 import { Box, Typography } from "@mui/material";
-import { PaperOne, CustomBox } from "./styledComponents";
+import { PostCardPaper, CustomBox } from "./styledComponents";
 import { levels } from "../commons/constants";
-import { IPostContent } from "../modules/types";
+import { IPostContent, IUser } from "../modules/types";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ViewTags from "./ViewTags";
+import ViewWriter from "./ViewWriter";
+import { getDisplayTimeByTimestamp } from "../modules/functions";
 
 interface IPostCardProps {
   postContent: IPostContent;
 }
 
 function PostCard({ postContent }: IPostCardProps) {
-  const postUrl = `/@${postContent?.userId}/${postContent?.articleNumber}`;
+  const postLink = `/@${postContent.userId}/${postContent.articleNumber}`;
+  const [userObj, setUserObj] = useState<IUser | null>();
+  useEffect(() => {
+    if (!postContent.userId) return;
+    getUser(postContent.userId).then((userData) => {
+      if (!userData) return;
+      setUserObj(userData);
+    });
+  }, [postContent]);
   return (
-    <Link to={postUrl}>
-      <PaperOne
-        sx={{
-          minHeight: "200px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box>
-          <CustomBox sx={{ alignItems: "flex-start" }}>
-            <Box sx={{ display: "flex" }}>
-              <img
-                src={`https://static.solved.ac/tier_small/${
-                  postContent.level ?? 0
-                }.svg`}
-                alt={levels[postContent.level ?? 0]}
-                width="20px"
-              />
-              <Typography sx={{ ml: 1 }}>
-                {levels[postContent.level ?? 0]}
-              </Typography>
-            </Box>
-            <Typography>{postContent.language}</Typography>
-          </CustomBox>
-          <Typography variant="h6">{postContent.title}</Typography>
-          <Typography>{postContent.tags?.join(", ")}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="subtitle2">
-            2022년 7월 6일 · {postContent.commentCount}개의 댓글
-          </Typography>
-          <CustomBox>
-            <Typography>by {postContent.userId}</Typography>
-            <Box
-              sx={{
-                width: "35px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Box sx={{ color: "#ff6666" }}>
-                <FontAwesomeIcon icon={faHeart} />
+    <PostCardPaper>
+      <Link to={postLink}>
+        <Box
+          sx={{
+            minHeight: "150px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            mb: 0.5,
+          }}
+        >
+          <Box>
+            <CustomBox sx={{ alignItems: "flex-start", height: "100%" }}>
+              <Box sx={{ display: "flex" }}>
+                <img
+                  src={`https://static.solved.ac/tier_small/${
+                    postContent.level ?? 0
+                  }.svg`}
+                  alt={levels[postContent.level ?? 0]}
+                  width="20px"
+                />
+                <Typography sx={{ ml: 1 }}>
+                  {levels[postContent.level ?? 0]}
+                </Typography>
               </Box>
-              {postContent.likeCount}
-            </Box>
-          </CustomBox>
+              <Typography>{postContent.language}</Typography>
+            </CustomBox>
+            <Typography variant="h6">{postContent.title}</Typography>
+            <ViewTags tags={postContent.tags} />
+          </Box>
+          <Box display="flex">
+            {postContent.uploadTime && (
+              <Typography variant="subtitle2">
+                {getDisplayTimeByTimestamp(postContent.uploadTime)}
+                &nbsp;·&nbsp;
+              </Typography>
+            )}
+            <Typography variant="subtitle2">
+              {postContent.commentCount}개의 댓글
+            </Typography>
+          </Box>
         </Box>
-      </PaperOne>
-    </Link>
+      </Link>
+      <CustomBox>
+        <ViewWriter userObj={userObj ?? null} userId={postContent.userId} />
+        <Box
+          sx={{
+            width: "35px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ color: "#ff6666" }}>
+            <FontAwesomeIcon icon={faHeart} />
+          </Box>
+          {postContent.likeCount}
+        </Box>
+      </CustomBox>
+    </PostCardPaper>
   );
 }
 

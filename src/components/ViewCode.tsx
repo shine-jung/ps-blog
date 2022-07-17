@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import { CodeBlock, paraisoLight } from "react-code-blocks";
 
 interface IViewCode {
-  code: string | undefined;
-  language: string | undefined;
+  code?: string;
+  language?: string;
 }
 
 function ViewCode({ code, language }: IViewCode) {

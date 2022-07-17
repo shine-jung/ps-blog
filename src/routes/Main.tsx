@@ -31,7 +31,7 @@ function Main() {
           <Typography variant="h4" sx={{ mb: 4 }}>
             전체 글
           </Typography>
-          <PostList postContents={postContents} />
+          <PostList postContents={postContents} maxColum={3} />
         </Container>
       ) : (
         <Loader>Loading...</Loader>

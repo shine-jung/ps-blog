@@ -3,7 +3,7 @@ import { Viewer } from "@toast-ui/react-editor";
 import "../styles/viewer.css";
 
 interface IViewDescription {
-  description: string | undefined;
+  description?: string;
 }
 
 function ViewDescription({ description }: IViewDescription) {

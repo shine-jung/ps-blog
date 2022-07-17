@@ -1,3 +1,8 @@
+export interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+}
+
 export interface IUser {
   authUid?: string;
   name?: string;
@@ -9,8 +14,8 @@ export interface IUser {
   introduction?: string;
   photoURL?: string;
   isRegistered?: boolean;
-  createdTime?: Date;
-  lastLoginTime?: Date;
+  createdTime?: Timestamp;
+  lastLoginTime?: Timestamp;
 }
 export interface IUpdateUser {
   name: string;
@@ -34,15 +39,15 @@ export interface INestedComment {
   nestedcommentId?: string;
   nestedComment?: string;
   userId?: string;
-  uploadTime?: Date;
-  lastUpdatedTime?: Date;
+  uploadTime?: Timestamp;
+  lastUpdatedTime?: Timestamp;
 }
 export interface IComment {
   commentId?: string;
   comment?: string;
   userId?: string;
-  uploadTime?: Date;
-  lastUpdatedTime?: Date;
+  uploadTime?: Timestamp;
+  lastUpdatedTime?: Timestamp;
   likedUsers?: string[];
   likeCount?: number;
   nestedComments?: INestedComment[];
@@ -58,8 +63,8 @@ export interface IPostContent {
   code?: string;
   language?: string;
   level?: number;
-  uploadTime?: Date;
-  lastUpdatedTime?: Date;
+  uploadTime?: Timestamp;
+  lastUpdatedTime?: Timestamp;
   tags?: string[];
   problemUrl?: string;
   likedUsers?: string[];

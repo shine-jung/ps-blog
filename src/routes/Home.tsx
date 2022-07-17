@@ -5,7 +5,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../service/firebase";
 import { IPostContent, IUser } from "../modules/types";
 import PostList from "../components/PostList";
-import { Container, Typography } from "@mui/material";
+import { Container, Box, Typography, Divider, Avatar } from "@mui/material";
 import { Loader } from "../components/styledComponents";
 
 function Home() {
@@ -41,11 +41,22 @@ function Home() {
     <>
       {isVaild ? (
         init && userObj ? (
-          <Container component="main" maxWidth="lg" sx={{ my: 16 }}>
-            <Typography variant="h4" sx={{ mb: 4 }}>
-              {userObj.name}님의 글
-            </Typography>
-            <PostList postContents={postContents} />
+          <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+            <Box display="flex" padding={4} alignItems="center">
+              <Avatar
+                alt={userObj.name}
+                src={userObj.photoURL}
+                sx={{ width: 128, height: 128 }}
+              />
+              <Box ml={4}>
+                <Typography fontSize={24} fontWeight={600} sx={{ mb: 0.5 }}>
+                  {userObj.blogTitle}
+                </Typography>
+                <Typography fontSize={18}>{userObj.introduction}</Typography>
+              </Box>
+            </Box>
+            <Divider sx={{ mx: 4, mb: 8 }} />
+            <PostList postContents={postContents} maxColum={2} />
           </Container>
         ) : (
           <Loader>Loading...</Loader>

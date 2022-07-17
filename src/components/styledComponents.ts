@@ -48,17 +48,18 @@ export const CustomBox = muiStyled(Box)(() => ({
   alignItems: "flex-end",
 }));
 
-export const PaperOne = muiStyled(Paper)(() => ({
-  padding: "1rem",
-  borderRadius: "0.875rem",
-  boxShadow: "0 4px 6px -1px rgb(0 0 0/0.1)",
-  transition: "all 0.1s linear",
+export const PostCardPaper = muiStyled(Paper)(() => ({
+  padding: "16px 16px 12px",
+  borderRadius: "8px",
+  boxShadow: "rgb(0 0 0 / 4%) 0px 4px 16px 0px",
+  transition: "all 0.15s ease-in 0s",
   "&:hover": {
-    transform: "scale(1.02)",
+    transform: "translateY(-4px);",
+    boxShadow: "rgb(0 0 0 / 8%) 0px 12px 20px 0px",
   },
 }));
 
-export const PaperTwo = muiStyled(Paper)(() => ({
+export const CommentCardPaper = muiStyled(Paper)(() => ({
   padding: "1rem",
   borderRadius: "0.375rem",
   boxShadow: "0 1px 3px 0 rgb(0 0 0/0.1), 0 1px 2px -1px rgb(0 0 0/0.1)",

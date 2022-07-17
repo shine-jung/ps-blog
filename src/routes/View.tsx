@@ -4,13 +4,24 @@ import { getUser } from "../service/user";
 import { IPostContent, IUser } from "../modules/types";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../service/firebase";
-import { Box, Container, IconButton, Link, Tooltip, Tab } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  IconButton,
+  Link,
+  Tooltip,
+  Tab,
+} from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Label, CustomBox, Loader } from "../components/styledComponents";
 import { levels } from "../commons/constants";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ViewDescription from "../components/ViewDescription";
 import ViewCode from "../components/ViewCode";
+import ViewTags from "../components/ViewTags";
+import ViewWriter from "../components/ViewWriter";
+import { getDisplayTimeByTimestamp } from "../modules/functions";
 
 function View() {
   const navigate = useNavigate();
@@ -26,8 +37,8 @@ function View() {
   const removePost = async (postId: string | null) => {
     if (!postId) return;
     await deleteDoc(doc(db, "posts", postId));
-    navigate({ pathname: "/" });
     alert("글이 삭제되었습니다");
+    navigate({ pathname: `/@${userId}` });
   };
   useEffect(() => {
     const getPostContent = async () => {
@@ -73,6 +84,15 @@ function View() {
               <Label variant="h4">{postContent.title}</Label>
               <Label variant="h5">{postContent.language}</Label>
             </CustomBox>
+            <Box display="flex" px={1} mb={1}>
+              <ViewWriter userObj={userObj ?? null} userId={userObj?.id} />
+              {postContent.uploadTime && (
+                <Typography sx={{ fontWeight: "300" }}>
+                  &nbsp;&nbsp;·&nbsp;&nbsp;
+                  {getDisplayTimeByTimestamp(postContent.uploadTime)}
+                </Typography>
+              )}
+            </Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Link
                 sx={{ p: 1 }}
@@ -102,7 +122,9 @@ function View() {
                 </TabPanel>
               </TabContext>
             </Box>
-            <Label>Tags: {postContent.tags?.join(", ")}</Label>
+            <Box padding={1}>
+              <ViewTags tags={postContent.tags} />
+            </Box>
             {userObj?.id === postContent.userId && (
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Tooltip title="글 삭제" arrow>

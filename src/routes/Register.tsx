@@ -63,8 +63,10 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
     alert("가입이 완료되었습니다");
   };
   useEffect(() => {
-    setFormData({ name: userObj?.name, email: userObj?.email });
-  }, []);
+    if (userObj) {
+      setFormData({ name: userObj?.name, email: userObj?.email });
+    }
+  }, [userObj]);
   return (
     <Container component="main" maxWidth="md" sx={{ mt: 12, mb: 16 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
