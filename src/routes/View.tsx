@@ -67,20 +67,20 @@ function View() {
       {isVaild ? (
         init && postContent ? (
           <Container component="main" maxWidth="md" sx={{ my: 16 }}>
-            <CustomBox sx={{ mb: 0.5 }}>
-              <Box sx={{ display: "flex", ml: 1 }}>
-                <img
-                  src={`https://static.solved.ac/tier_small/${
-                    postContent.level ?? 0
-                  }.svg`}
-                  alt={levels[postContent.level ?? 0]}
-                  width="24px"
-                />
-                <Label variant="h6" sx={{ ml: 0.5 }}>
-                  {levels[postContent.level ?? 0]}
-                </Label>
-              </Box>
-            </CustomBox>
+            {postContent.level && (
+              <CustomBox sx={{ mb: 0.5 }}>
+                <Box sx={{ display: "flex", ml: 1 }}>
+                  <img
+                    src={`https://static.solved.ac/tier_small/${postContent.level}.svg`}
+                    alt={levels[postContent.level]}
+                    width="24px"
+                  />
+                  <Label variant="h6" sx={{ ml: 0.5 }}>
+                    {levels[postContent.level]}
+                  </Label>
+                </Box>
+              </CustomBox>
+            )}
             <CustomBox sx={{ mb: 1.5 }}>
               <Label variant="h4">{postContent.title}</Label>
               <Label variant="h5">{postContent.language}</Label>
