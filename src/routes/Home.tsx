@@ -66,7 +66,7 @@ function Home() {
               {userObj.bojId && (
                 <Link
                   href={`https://www.acmicpc.net/user/${userObj.bojId}`}
-                  color="#2A7FB9"
+                  color="info.main"
                   underline="hover"
                   target="_blank"
                   rel="noopener"

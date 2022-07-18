@@ -100,11 +100,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
     }
   };
   const onPostBtnClick = async () => {
-    if (
-      !newPostContent?.title ||
-      !newPostContent?.description ||
-      !newPostContent?.code
-    ) {
+    if (!newPostContent?.title || !newPostContent?.description) {
       alert("내용을 입력해주세요");
       return;
     }
