@@ -1,5 +1,5 @@
 export const levels = [
-  "Unrated",
+  "Free",
   "Bronze V",
   "Bronze IV",
   "Bronze III",

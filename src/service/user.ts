@@ -39,17 +39,19 @@ export const updateUser = async (id: string, args: IUpdateUser) => {
 };
 
 export const deleteUser = async (user: IUser) => {
-  if (!user.authUid || !user.id || !user.articleNumber) return;
+  if (!user.authUid || !user.id) return;
   if (!window.confirm("계정을 삭제하시겠습니까? 모든 데이터가 삭제됩니다")) {
     alert("취소되었습니다");
     return;
   }
   const authRef = doc(db, "users", user.authUid);
   const userRef = doc(db, "users", user.id);
-  for (let i = 0; i < user.articleNumber; i++) {
-    const docRef = doc(db, "posts", `@${user.id}_${i}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) await deleteDoc(docRef);
+  if (user.articleNumber) {
+    for (let i = 0; i < user.articleNumber; i++) {
+      const docRef = doc(db, "posts", `@${user.id}_${i}`);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) await deleteDoc(docRef);
+    }
   }
   await deleteDoc(authRef);
   await deleteDoc(userRef);

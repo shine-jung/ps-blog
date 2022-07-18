@@ -42,7 +42,7 @@ function PostCard({ postContent }: IPostCardProps) {
               <Box sx={{ display: "flex" }}>
                 <img
                   src={`https://static.solved.ac/tier_small/${
-                    postContent.level ?? 0
+                    postContent.level ? postContent.level : "sprout"
                   }.svg`}
                   alt={levels[postContent.level ?? 0]}
                   width="20px"

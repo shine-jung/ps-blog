@@ -4,19 +4,9 @@ import { getUser } from "../service/user";
 import { IPostContent, IUser } from "../modules/types";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../service/firebase";
-import {
-  Box,
-  Container,
-  Typography,
-  IconButton,
-  Link,
-  Tooltip,
-  Tab,
-} from "@mui/material";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Box, Container, Typography, Link } from "@mui/material";
 import { Label, CustomBox, Loader } from "../components/styledComponents";
 import { levels } from "../commons/constants";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ViewDescription from "../components/ViewDescription";
 import ViewCode from "../components/ViewCode";
 import ViewTags from "../components/ViewTags";
@@ -31,10 +21,6 @@ function View() {
   const [isVaild, setIsVaild] = useState(true);
   const [userObj, setUserObj] = useState<IUser | null>();
   const [postContent, setPostContent] = useState<IPostContent>();
-  const [tabValue, setTabValue] = useState("1");
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setTabValue(newValue);
-  };
   const removePost = async (postId: string | null) => {
     if (!postId) return;
     await deleteDoc(doc(db, "posts", postId));
@@ -67,11 +53,11 @@ function View() {
       {isVaild ? (
         init && postContent ? (
           <Container component="main" maxWidth="md" sx={{ my: 16 }}>
-            <CustomBox sx={{ mb: 0.5 }}>
-              <Box sx={{ display: "flex", ml: 1 }}>
+            <CustomBox>
+              <Box display="flex" ml={1}>
                 <img
                   src={`https://static.solved.ac/tier_small/${
-                    postContent.level ?? 0
+                    postContent.level ? postContent.level : "sprout"
                   }.svg`}
                   alt={levels[postContent.level ?? 0]}
                   width="24px"
@@ -80,68 +66,58 @@ function View() {
                   {levels[postContent.level ?? 0]}
                 </Label>
               </Box>
+              <Label variant="h6">{postContent.language}</Label>
             </CustomBox>
-            <CustomBox sx={{ mb: 1.5 }}>
-              <Label variant="h4">{postContent.title}</Label>
-              <Label variant="h5">{postContent.language}</Label>
-            </CustomBox>
-            <Box display="flex" px={1} mb={1}>
-              <ViewWriter userObj={userObj ?? null} userId={userObj?.id} />
-              {postContent.uploadTime && (
-                <Typography sx={{ fontWeight: "300" }}>
-                  &nbsp;&nbsp;·&nbsp;&nbsp;
-                  {getDisplayTimeByTimestamp(postContent.uploadTime)}
-                </Typography>
-              )}
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Link
-                sx={{ p: 1 }}
-                color="primary"
-                href={postContent.problemUrl}
-                target="_blank"
-                rel="noopener"
-              >
-                문제 링크
-              </Link>
-            </Box>
-            <Box minHeight={350}>
-              <TabContext value={tabValue}>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <TabList onChange={handleTabChange}>
-                    <Tab label="설명" value="1" />
-                    <Tab label="코드" value="2" />
-                  </TabList>
-                </Box>
-                <TabPanel value="1">
-                  <ViewDescription description={postContent.description} />
-                </TabPanel>
-                <TabPanel value="2">
-                  <ViewCode
-                    code={postContent.code}
-                    language={postContent.language}
-                  />
-                </TabPanel>
-              </TabContext>
-            </Box>
-            <Box padding={1}>
-              <ViewTags tags={postContent.tags} />
-            </Box>
-            {user?.uid === userObj?.authUid && (
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                <Tooltip title="글 삭제" arrow>
-                  <IconButton
-                    onClick={() => {
-                      if (window.confirm("글을 삭제하시겠습니까?")) {
-                        removePost(postContent.postId ?? null);
-                      }
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+            <Label variant="h3" mb={1}>
+              {postContent.title}
+            </Label>
+            <CustomBox p={1} mb={1}>
+              <Box display="flex">
+                <ViewWriter userObj={userObj ?? null} userId={userObj?.id} />
+                {postContent.uploadTime && (
+                  <Typography sx={{ fontWeight: "300" }}>
+                    &nbsp;&nbsp;·&nbsp;&nbsp;
+                    {getDisplayTimeByTimestamp(postContent.uploadTime)}
+                  </Typography>
+                )}
               </Box>
+              {user?.uid === userObj?.authUid && (
+                <Link
+                  component="button"
+                  variant="body1"
+                  color="text.secondary"
+                  underline="hover"
+                  onClick={() => {
+                    if (window.confirm("글을 삭제하시겠습니까?")) {
+                      removePost(postContent.postId ?? null);
+                    }
+                  }}
+                >
+                  삭제
+                </Link>
+              )}
+            </CustomBox>
+            <ViewDescription description={postContent.description} />
+            {postContent.code && (
+              <ViewCode
+                code={postContent.code}
+                language={postContent.language}
+              />
             )}
+            <CustomBox mt={8} p={1}>
+              <ViewTags tags={postContent.tags} />
+              {postContent.problemUrl && (
+                <Link
+                  padding={1}
+                  color="info.main"
+                  href={postContent.problemUrl}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  문제 링크
+                </Link>
+              )}
+            </CustomBox>
           </Container>
         ) : (
           <Loader>Loading...</Loader>
