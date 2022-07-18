@@ -21,6 +21,8 @@ function Main() {
     );
   };
   useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `pslog`;
     getPostContents();
     setInit(true);
   }, []);

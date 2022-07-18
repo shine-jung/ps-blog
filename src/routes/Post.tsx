@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProblemInfo } from "../service/api";
 import {
@@ -99,6 +99,10 @@ function Post({ refreshUser, userObj }: IPostProps) {
       }
     }
   };
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `글 쓰기 - pslog`;
+  }, []);
   const onPostBtnClick = async () => {
     if (!newPostContent?.title || !newPostContent?.description) {
       alert("내용을 입력해주세요");

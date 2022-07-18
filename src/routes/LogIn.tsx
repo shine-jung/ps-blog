@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { login } from "../service/auth";
 import LightDarkToggle from "../components/LightDarkToggle";
 import { Button, Box, Typography, Container, Link } from "@mui/material";
@@ -29,6 +30,10 @@ function Copyright(props: any) {
 }
 
 function LogIn() {
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `로그인 - pslog`;
+  }, []);
   return (
     <Container component="main" maxWidth="xs">
       <Box

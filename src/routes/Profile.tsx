@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { storage } from "../service/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -96,6 +96,10 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     if (!userObj?.id) return;
     await deleteUser(userObj);
   };
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `프로필 - pslog`;
+  }, []);
   return (
     <>
       {userObj && (

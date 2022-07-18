@@ -67,6 +67,10 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
       setFormData({ name: userObj?.name, email: userObj?.email });
     }
   }, [userObj]);
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `회원가입 - pslog`;
+  }, []);
   return (
     <Container component="main" maxWidth="md" sx={{ mt: 12, mb: 16 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>

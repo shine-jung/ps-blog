@@ -48,6 +48,10 @@ function View() {
     });
     setInit(true);
   }, [userId, articleNumber]);
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `${postContent?.title ?? `${userId}님의 포스트`}`;
+  }, [postContent?.title, userId]);
   return (
     <>
       {isVaild ? (

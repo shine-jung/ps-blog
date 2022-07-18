@@ -44,6 +44,10 @@ function Home() {
     });
     setInit(true);
   }, [userId]);
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `${userId} - pslog`;
+  }, [userId]);
   return (
     <>
       {isVaild ? (
