@@ -39,7 +39,7 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
     const user = auth.currentUser;
     const id = formData?.id;
     if (!user || !id) return;
-    const authRef = doc(db, "users", user.uid);
+    const authRef = doc(db, "auths", user.uid);
     const userRef = doc(db, "users", id);
     const authDocSnap = await getDoc(authRef);
     const userDocSnap = await getDoc(userRef);
@@ -52,7 +52,6 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
       ...formData,
       blogTitle: `${formData?.name}님의 블로그`,
       articleNumber: 0,
-      isRegistered: true,
       createdTime: serverTimestamp(),
       lastLoginTime: serverTimestamp(),
     });

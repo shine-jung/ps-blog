@@ -13,7 +13,6 @@ export interface IUser {
   articleNumber?: number;
   introduction?: string;
   photoURL?: string;
-  isRegistered?: boolean;
   createdTime?: Timestamp;
   lastLoginTime?: Timestamp;
 }

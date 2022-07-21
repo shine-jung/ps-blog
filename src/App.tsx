@@ -45,7 +45,7 @@ function App() {
           <Router
             refreshUser={refreshUser}
             isLoggedIn={Boolean(userObj)}
-            isRegistered={userObj?.isRegistered ?? false}
+            isRegistered={Boolean(userObj?.id)}
             userObj={userObj ?? null}
           />
         ) : (

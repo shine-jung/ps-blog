@@ -67,19 +67,22 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
     }
     if (userObj?.id && newImgFile?.name) {
       setIsImgUpdateLoading(true);
-      const storageRef = ref(storage, `${userObj.id}_${newImgFile.name}`);
-      await uploadBytes(storageRef, newImgFile);
-      getDownloadURL(ref(storage, `${userObj.id}_${newImgFile.name}`)).then(
-        async (url) => {
-          if (!userObj.id) return;
-          await updateUser(userObj.id, {
-            photoURL: url,
-          } as IUpdateUser);
-          refreshUser();
-          setIsImgUpdateLoading(false);
-          alert("프로필 사진 변경이 완료되었습니다");
-        }
+      const storageRef = ref(
+        storage,
+        `images/profile/${userObj.id}/${newImgFile.name}`
       );
+      await uploadBytes(storageRef, newImgFile);
+      getDownloadURL(
+        ref(storage, `images/profile/${userObj.id}/${newImgFile.name}`)
+      ).then(async (url) => {
+        if (!userObj.id) return;
+        await updateUser(userObj.id, {
+          photoURL: url,
+        } as IUpdateUser);
+        refreshUser();
+        setIsImgUpdateLoading(false);
+        alert("프로필 사진 변경이 완료되었습니다");
+      });
     }
   };
   const onSubmitFormData = async (event: React.FormEvent<HTMLFormElement>) => {
