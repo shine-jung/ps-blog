@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import { Shadows } from "@mui/material/styles/shadows";
 
 const breakPoints = {
   values: {
@@ -13,6 +14,11 @@ const breakPoints = {
 const textStyle = {
   fontFamily: "Source Sans Pro, sans-serif",
 };
+
+const shadows = [
+  "none",
+  ...Array(25).fill("rgb(0 0 0 / 8%) 0px 0px 8px"),
+] as Shadows;
 
 export const lightTheme = createTheme({
   breakpoints: breakPoints,
@@ -35,6 +41,7 @@ export const lightTheme = createTheme({
       paper: "#fff",
     },
   },
+  shadows: shadows,
   typography: textStyle,
 });
 
@@ -59,5 +66,6 @@ export const darkTheme = createTheme({
       paper: "#374251",
     },
   },
+  shadows: shadows,
   typography: textStyle,
 });

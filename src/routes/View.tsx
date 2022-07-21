@@ -5,7 +5,7 @@ import { IPostContent, IUser } from "../modules/types";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../service/firebase";
 import { Box, Container, Typography, Link } from "@mui/material";
-import { Label, CustomBox, Loader } from "../components/styledComponents";
+import { Label, CustomBox, Loader } from "../components/components";
 import { levels } from "../commons/constants";
 import ViewDescription from "../components/ViewDescription";
 import ViewCode from "../components/ViewCode";
@@ -56,7 +56,7 @@ function View() {
     <>
       {isVaild ? (
         init && postContent ? (
-          <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+          <Container component="main" maxWidth="md">
             <CustomBox>
               <Box display="flex" ml={1}>
                 <img
@@ -70,7 +70,9 @@ function View() {
                   {levels[postContent.level ?? 0]}
                 </Label>
               </Box>
-              <Label variant="h6">{postContent.language}</Label>
+              <Label variant="h6" fontWeight={300}>
+                {postContent.language}
+              </Label>
             </CustomBox>
             <Label variant="h3" mb={1}>
               {postContent.title}
@@ -79,7 +81,7 @@ function View() {
               <Box display="flex">
                 <ViewWriter userObj={userObj ?? null} userId={userObj?.id} />
                 {postContent.uploadTime && (
-                  <Typography sx={{ fontWeight: "300" }}>
+                  <Typography>
                     &nbsp;&nbsp;·&nbsp;&nbsp;
                     {getDisplayTimeByTimestamp(postContent.uploadTime)}
                   </Typography>

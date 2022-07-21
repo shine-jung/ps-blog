@@ -17,12 +17,12 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  StyledInputBase,
+  TextInput,
   CodeInput,
   Label,
   CustomBox,
   FormBox,
-} from "../components/styledComponents";
+} from "../components/components";
 import { IUser, INewPostContent, ITag } from "../modules/types";
 import { levels, languages } from "../commons/constants";
 import { Editor } from "@toast-ui/react-editor";
@@ -141,7 +141,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
     );
   };
   return (
-    <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+    <Container component="main" maxWidth="md">
       <CustomBox sx={{ mb: 0.5 }}>
         <Box display="flex" ml={1}>
           <img
@@ -162,7 +162,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
       <CustomBox sx={{ mb: 3 }}>
         <Box sx={{ display: "flex" }}>
           <Label sx={{ mr: 1 }}>글 제목</Label>
-          <StyledInputBase
+          <TextInput
             type="text"
             value={newPostContent?.title ?? ""}
             onChange={onChangeFormValue}
@@ -184,7 +184,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
           </NativeSelect>
         </Box>
         <FormBox onSubmit={onSubmitProblemId}>
-          <StyledInputBase
+          <TextInput
             type="text"
             onChange={onChangeProblemId}
             sx={{ width: 100, mr: 2 }}
@@ -203,6 +203,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
         <Editor
           ref={editorRef}
           initialValue="여기에 코드 설명을 입력하세요"
+          placeholder="여기에 코드 설명을 입력하세요"
           previewStyle="vertical"
           height="400px"
           initialEditType="wysiwyg"
@@ -237,7 +238,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
       <CustomBox sx={{ alignItems: "center" }}>
         <CustomBox>
           <Label sx={{ mr: 1 }}>문제 링크</Label>
-          <StyledInputBase
+          <TextInput
             type="url"
             value={newPostContent?.problemUrl ?? ""}
             onChange={onChangeFormValue}

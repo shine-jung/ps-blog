@@ -14,8 +14,8 @@ function PostList({ postContents, maxColum }: IPostListProps) {
   const [page, setPage] = useState(1);
   const offset = (page - 1) * limit;
   return (
-    <>
-      {postContents && (
+    <Box minHeight={270}>
+      {postContents && postContents.length !== 0 ? (
         <>
           <Grid
             container
@@ -51,8 +51,12 @@ function PostList({ postContents, maxColum }: IPostListProps) {
             setPage={setPage}
           />
         </>
+      ) : (
+        <Box display="flex" justifyContent="center">
+          글이 아직 없습니다.
+        </Box>
       )}
-    </>
+    </Box>
   );
 }
 

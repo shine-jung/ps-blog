@@ -10,7 +10,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./service/firebase";
 import { getCurrentUser } from "./service/user";
 import { IUser } from "./modules/types";
-import { Loader } from "./components/styledComponents";
+import { Loader } from "./components/components";
 
 const GlobalStyle = createGlobalStyle`
   a {

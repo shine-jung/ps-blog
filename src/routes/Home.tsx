@@ -13,7 +13,7 @@ import {
   Avatar,
   Link,
 } from "@mui/material";
-import { CustomBox, Loader } from "../components/styledComponents";
+import { CustomBox, Loader } from "../components/components";
 
 function Home() {
   const { userId } = useParams();
@@ -52,7 +52,7 @@ function Home() {
     <>
       {isVaild ? (
         init && userObj ? (
-          <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+          <Container component="main" maxWidth="md">
             <CustomBox mx={4} alignItems="center">
               <Box display="flex" alignItems="center">
                 <Avatar

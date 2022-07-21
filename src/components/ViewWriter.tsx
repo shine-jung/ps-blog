@@ -17,8 +17,10 @@ function ViewWriter({ userObj, userId }: IViewWriter) {
           src={userObj?.photoURL}
           sx={{ width: 24, height: 24, mr: 1 }}
         />
-        <Typography sx={{ fontWeight: "300" }}>by&nbsp;</Typography>
-        <Typography sx={{ fontWeight: "400" }}>{userId}</Typography>
+        <Typography fontWeight={300} color="text.secondary">
+          by&nbsp;
+        </Typography>
+        <Typography>{userId}</Typography>
       </Box>
     </Link>
   );

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { IUser, IUpdateUser } from "../modules/types";
 import { updateUser, deleteUser } from "../service/user";
-import { StyledInputBase } from "../components/styledComponents";
+import { TextInput } from "../components/components";
 
 interface IProfileProps {
   refreshUser: () => void;
@@ -103,7 +103,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
   return (
     <>
       {userObj && (
-        <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+        <Container component="main" maxWidth="md">
           <Typography variant="h4" sx={{ mb: 3 }}>
             Profile
           </Typography>
@@ -147,7 +147,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
             <form onSubmit={onSubmitFormData}>
               <Box marginBottom={2}>
                 <Typography marginBottom={1}>이름</Typography>
-                <StyledInputBase
+                <TextInput
                   type="text"
                   name="name"
                   value={formData.name}
@@ -157,7 +157,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
               </Box>
               <Box marginBottom={2}>
                 <Typography marginBottom={1}>이메일</Typography>
-                <StyledInputBase
+                <TextInput
                   type="email"
                   name="email"
                   value={formData.email}
@@ -168,16 +168,11 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
               </Box>
               <Box marginBottom={2}>
                 <Typography marginBottom={1}>아이디</Typography>
-                <StyledInputBase
-                  type="text"
-                  name="id"
-                  value={userObj.id}
-                  disabled
-                />
+                <TextInput type="text" name="id" value={userObj.id} disabled />
               </Box>
               <Box marginBottom={2}>
                 <Typography marginBottom={1}>백준 아이디 (선택)</Typography>
-                <StyledInputBase
+                <TextInput
                   type="text"
                   name="bojId"
                   value={formData.bojId}
@@ -186,7 +181,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
               </Box>
               <Box marginBottom={2}>
                 <Typography marginBottom={1}>블로그 제목</Typography>
-                <StyledInputBase
+                <TextInput
                   type="text"
                   name="blogTitle"
                   value={formData.blogTitle}
@@ -197,7 +192,7 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
               </Box>
               <Box marginBottom={3}>
                 <Typography marginBottom={1}>한 줄 소개</Typography>
-                <StyledInputBase
+                <TextInput
                   type="text"
                   name="introduction"
                   value={formData.introduction}

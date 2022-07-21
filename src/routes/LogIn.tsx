@@ -1,33 +1,9 @@
 import { useEffect } from "react";
 import { login } from "../service/auth";
-import LightDarkToggle from "../components/LightDarkToggle";
-import { Button, Box, Typography, Container, Link } from "@mui/material";
+import { Button, Box, Typography, Container } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link
-        color="inherit"
-        href="https://github.com/shine-jung"
-        target="_blank"
-        rel="noopener"
-      >
-        shine-jung
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 function LogIn() {
   useEffect(() => {
@@ -35,16 +11,15 @@ function LogIn() {
     titleElement.innerHTML = `로그인 - pslog`;
   }, []);
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
       <Box
         sx={{
-          marginTop: "20vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <CodeIcon fontSize="large" sx={{ m: 2 }} />
+        <CodeIcon fontSize="large" sx={{ mt: 2 }} />
         <Typography
           variant="h5"
           noWrap
@@ -81,10 +56,8 @@ function LogIn() {
             <FontAwesomeIcon icon={faGithub} />
           </Button>
         </Box>
-        <Typography sx={{ mb: 1 }}>구글 또는 깃허브 계정으로 로그인</Typography>
-        <LightDarkToggle />
+        <Typography>구글 또는 깃허브 계정으로 로그인</Typography>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
 }
