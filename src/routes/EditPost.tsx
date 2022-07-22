@@ -117,8 +117,12 @@ function EditPost({ refreshUser }: IPostProps) {
     if (!state.postContent.postId) return;
     const postsRef = doc(db, "posts", state.postContent.postId);
     await updateDoc(postsRef, {
-      ...postContent,
+      title: postContent.title,
+      language: postContent.language,
+      description: postContent.description,
+      code: postContent.code,
       tags: tags ?? [],
+      problemUrl: postContent.problemUrl,
       lastUpdatedTime: serverTimestamp(),
     });
     refreshUser();
