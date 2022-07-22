@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fetchProblemInfo } from "../service/api";
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  increment,
-  serverTimestamp,
-} from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../service/firebase";
 import {
   Box,
@@ -23,7 +17,7 @@ import {
   CustomBox,
   FormBox,
 } from "../components/components";
-import { IUser, INewPostContent, ITag } from "../modules/types";
+import { IUser, IPostContent, ITag } from "../modules/types";
 import { levels, languages } from "../commons/constants";
 import { Editor } from "@toast-ui/react-editor";
 import "../styles/editor.css";
@@ -31,43 +25,52 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 import Tags from "@yaireo/tagify/dist/react.tagify";
 import "../styles/tagify.css";
 
+interface RouteState {
+  state: {
+    postContent: IPostContent;
+  };
+}
+
 interface IPostProps {
   refreshUser: () => void;
   userObj: IUser | null;
 }
 
-function Post({ refreshUser, userObj }: IPostProps) {
+function EditPost({ refreshUser, userObj }: IPostProps) {
   const navigate = useNavigate();
+  const { state } = useLocation() as RouteState;
   const editorRef = useRef<any>();
-  const [newPostContent, setNewPostContent] = useState<INewPostContent>();
+  const [postContent, setPostContent] = useState<IPostContent>(
+    state.postContent
+  );
   const [tags, setTags] = useState<string[]>();
   const [problemId, setProblemId] = useState<number>();
   const onChangeFormValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setNewPostContent({
-      ...newPostContent,
+    setPostContent({
+      ...postContent,
       [name]: value,
     });
   };
   const onChangeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
-    setNewPostContent({
-      ...newPostContent,
+    setPostContent({
+      ...postContent,
       language: value,
     });
   };
   const onChangeDescription = () => {
     const data = editorRef.current.getInstance().getHTML();
-    setNewPostContent({
-      ...newPostContent,
+    setPostContent({
+      ...postContent,
       description: data,
     });
   };
   const onChangeCode = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const data = value.replaceAll(" ", "&nbsp;");
-    setNewPostContent({
-      ...newPostContent,
+    setPostContent({
+      ...postContent,
       code: data,
     });
   };
@@ -87,8 +90,8 @@ function Post({ refreshUser, userObj }: IPostProps) {
     if (problemId) {
       try {
         const problemInfo = await fetchProblemInfo(problemId);
-        setNewPostContent({
-          ...newPostContent,
+        setPostContent({
+          ...postContent,
           title: `${problemInfo.problemId}. ${problemInfo.titleKo}`,
           level: problemInfo.level,
           problemUrl: `https://www.acmicpc.net/problem/${problemInfo.problemId}`,
@@ -101,37 +104,28 @@ function Post({ refreshUser, userObj }: IPostProps) {
   };
   useEffect(() => {
     const titleElement = document.getElementsByTagName("title")[0];
-    titleElement.innerHTML = `글 쓰기 - pslog`;
+    titleElement.innerHTML = `글 수정 - pslog`;
   }, []);
+  useEffect(() => {
+    setTags(state.postContent.tags);
+    editorRef.current?.getInstance().setHTML(state.postContent.description);
+  }, [state.postContent]);
   const onPostBtnClick = async () => {
-    if (!newPostContent?.title || !newPostContent?.description) {
+    if (!postContent?.title || !postContent?.description) {
       alert("내용을 입력해주세요");
       return;
     }
-    if (!userObj?.id) return;
-    const postId = `@${userObj.id}_${userObj.articleNumber}`;
-    await setDoc(doc(db, "posts", postId), {
-      ...newPostContent,
+    if (!userObj?.id || !state.postContent.postId) return;
+    const postsRef = doc(db, "posts", state.postContent.postId);
+    await updateDoc(postsRef, {
+      ...postContent,
       tags: tags ?? [],
-      postId: postId,
-      userId: userObj.id,
-      userPhotoURL: userObj.photoURL,
-      authUid: userObj.authUid,
-      articleNumber: userObj.articleNumber,
       uploadTime: serverTimestamp(),
       lastUpdatedTime: serverTimestamp(),
-      likedUsers: [],
-      likeCount: 0,
-      comments: [],
-      commentCount: 0,
-    });
-    const userRef = doc(db, "users", userObj.id);
-    await updateDoc(userRef, {
-      articleNumber: increment(1),
     });
     refreshUser();
-    navigate({ pathname: `/@${userObj.id}` });
-    alert("새로운 글이 업로드 되었습니다");
+    navigate(-1);
+    alert("글이 수정되었습니다");
   };
   const getTagsArray = (tags: ITag[] | undefined) => {
     return tags?.map((tag) =>
@@ -143,17 +137,17 @@ function Post({ refreshUser, userObj }: IPostProps) {
   };
   return (
     <Container component="main" maxWidth="md">
-      <CustomBox sx={{ mb: 0.5 }}>
+      <CustomBox sx={{ mb: 1 }}>
         <Box display="flex" ml={1}>
           <img
             src={`https://static.solved.ac/tier_small/${
-              newPostContent?.level ? newPostContent?.level : "sprout"
+              postContent?.level ? postContent?.level : "sprout"
             }.svg`}
-            alt={levels[newPostContent?.level ?? 0]}
+            alt={levels[postContent?.level ?? 0]}
             width="24px"
           />
           <Label variant="h6" sx={{ ml: 0.5 }}>
-            {levels[newPostContent?.level ?? 0]}
+            {levels[postContent?.level ?? 0]}
           </Label>
         </Box>
         <Typography sx={{ textAlign: "end" }}>
@@ -165,13 +159,13 @@ function Post({ refreshUser, userObj }: IPostProps) {
           <Label sx={{ mr: 1 }}>글 제목</Label>
           <TextInput
             type="text"
-            value={newPostContent?.title ?? ""}
+            value={postContent?.title ?? ""}
             onChange={onChangeFormValue}
             name="title"
             sx={{ width: 250, mr: 2.5 }}
           />
           <NativeSelect
-            value={newPostContent?.language}
+            value={postContent?.language}
             variant="outlined"
             onChange={onChangeLanguage}
             color="primary"
@@ -222,7 +216,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
       </Box>
       <CodeInput
         type="text"
-        value={newPostContent?.code?.replaceAll("&nbsp;", " ") ?? ""}
+        value={postContent?.code?.replaceAll("&nbsp;", " ") ?? ""}
         onChange={onChangeCode}
         name="code"
         multiline
@@ -241,24 +235,28 @@ function Post({ refreshUser, userObj }: IPostProps) {
           <Label sx={{ mr: 1 }}>문제 링크</Label>
           <TextInput
             type="url"
-            value={newPostContent?.problemUrl ?? ""}
+            value={postContent?.problemUrl ?? ""}
             onChange={onChangeFormValue}
             name="problemUrl"
             sx={{ width: 350 }}
           />
         </CustomBox>
-        <Button
-          onClick={onPostBtnClick}
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{ height: 40 }}
-        >
-          글 업로드
-        </Button>
+        <Box display="flex">
+          <Button
+            variant="text"
+            color="primary"
+            sx={{ mr: 1 }}
+            onClick={() => navigate(-1)}
+          >
+            취소
+          </Button>
+          <Button onClick={onPostBtnClick} variant="contained" color="primary">
+            글 수정
+          </Button>
+        </Box>
       </CustomBox>
     </Container>
   );
 }
 
-export default Post;
+export default EditPost;

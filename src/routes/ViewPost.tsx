@@ -13,7 +13,7 @@ import ViewTags from "../components/ViewTags";
 import ViewWriter from "../components/ViewWriter";
 import { getDisplayTimeByTimestamp } from "../modules/functions";
 
-function View() {
+function ViewPost() {
   const user = auth.currentUser;
   const navigate = useNavigate();
   const { userId, articleNumber } = useParams();
@@ -21,7 +21,7 @@ function View() {
   const [isVaild, setIsVaild] = useState(true);
   const [userObj, setUserObj] = useState<IUser | null>();
   const [postContent, setPostContent] = useState<IPostContent>();
-  const removePost = async (postId: string | null) => {
+  const removePost = async (postId?: string) => {
     if (!postId) return;
     await deleteDoc(doc(db, "posts", postId));
     navigate({ pathname: `/@${userId}` });
@@ -90,19 +90,14 @@ function View() {
                   </Typography>
                 )}
               </Box>
-              {user?.uid === userObj?.authUid && (
+              {postContent.problemUrl && (
                 <Link
-                  component="button"
-                  variant="body1"
-                  color="text.secondary"
-                  underline="hover"
-                  onClick={() => {
-                    if (window.confirm("글을 삭제하시겠습니까?")) {
-                      removePost(postContent.postId ?? null);
-                    }
-                  }}
+                  color="info.main"
+                  href={postContent.problemUrl}
+                  target="_blank"
+                  rel="noopener"
                 >
-                  삭제
+                  문제 링크
                 </Link>
               )}
             </CustomBox>
@@ -115,16 +110,38 @@ function View() {
             )}
             <CustomBox mt={8} p={1}>
               <ViewTags tags={postContent.tags} />
-              {postContent.problemUrl && (
-                <Link
-                  padding={1}
-                  color="info.main"
-                  href={postContent.problemUrl}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  문제 링크
-                </Link>
+              {user?.uid === userObj?.authUid && (
+                <Box display="flex">
+                  <Link
+                    component="button"
+                    variant="body1"
+                    color="text.secondary"
+                    underline="hover"
+                    onClick={() => {
+                      navigate("/edit", {
+                        state: { postContent: postContent },
+                      });
+                    }}
+                  >
+                    수정
+                  </Link>
+                  <Typography color="text.secondary">
+                    &nbsp;&nbsp;·&nbsp;&nbsp;
+                  </Typography>
+                  <Link
+                    component="button"
+                    variant="body1"
+                    color="text.secondary"
+                    underline="hover"
+                    onClick={() => {
+                      if (window.confirm("글을 삭제하시겠습니까?")) {
+                        removePost(postContent.postId);
+                      }
+                    }}
+                  >
+                    삭제
+                  </Link>
+                </Box>
               )}
             </CustomBox>
           </Container>
@@ -138,4 +155,4 @@ function View() {
   );
 }
 
-export default View;
+export default ViewPost;

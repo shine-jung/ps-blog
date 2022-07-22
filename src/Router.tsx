@@ -4,8 +4,9 @@ import LogIn from "./routes/LogIn";
 import Main from "./routes/Main";
 import Profile from "./routes/Profile";
 import Home from "./routes/Home";
-import Post from "./routes/Post";
-import View from "./routes/View";
+import UploadPost from "./routes/UploadPost";
+import EditPost from "./routes/EditPost";
+import ViewPost from "./routes/ViewPost";
 import Register from "./routes/Register";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -47,10 +48,16 @@ function Router({
             <Route path="/" element={<Main />} />
             <Route
               path="/post"
-              element={<Post refreshUser={refreshUser} userObj={userObj} />}
+              element={
+                <UploadPost refreshUser={refreshUser} userObj={userObj} />
+              }
+            />
+            <Route
+              path="/edit"
+              element={<EditPost refreshUser={refreshUser} userObj={userObj} />}
             />
             <Route path="/@:userId" element={<Home />} />
-            <Route path="/@:userId/:articleNumber" element={<View />} />
+            <Route path="/@:userId/:articleNumber" element={<ViewPost />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
