@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../service/user";
 import { Box, Typography } from "@mui/material";
 import { PostCardPaper, CustomBox, CardDivider } from "./components";
 import { levels } from "../commons/constants";
-import { IPostContent, IUser } from "../modules/types";
+import { IPostContent } from "../modules/types";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ViewTags from "./ViewTags";
@@ -18,14 +16,6 @@ interface IPostCardProps {
 function PostCard({ postContent }: IPostCardProps) {
   const navigate = useNavigate();
   const postLink = `/@${postContent.userId}/${postContent.articleNumber}`;
-  const [userObj, setUserObj] = useState<IUser | null>();
-  useEffect(() => {
-    if (!postContent.userId) return;
-    getUser(postContent.userId).then((userData) => {
-      if (!userData) return;
-      setUserObj(userData);
-    });
-  }, [postContent]);
   return (
     <PostCardPaper>
       <Box
@@ -76,7 +66,10 @@ function PostCard({ postContent }: IPostCardProps) {
       </Box>
       <CardDivider />
       <CustomBox px={1.5} py={0.75}>
-        <ViewWriter userObj={userObj ?? null} userId={postContent.userId} />
+        <ViewWriter
+          userId={postContent.userId}
+          userPhotoURL={postContent.userPhotoURL}
+        />
         <Box
           sx={{
             width: "40px",

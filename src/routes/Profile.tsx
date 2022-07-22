@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { storage } from "../service/firebase";
+import { db, storage } from "../service/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
@@ -13,6 +13,7 @@ import {
 import { IUser, IUpdateUser } from "../modules/types";
 import { updateUser, deleteUser } from "../service/user";
 import { TextInput } from "../components/components";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 interface IProfileProps {
   refreshUser: () => void;
@@ -79,6 +80,16 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
         await updateUser(userObj.id, {
           photoURL: url,
         } as IUpdateUser);
+        if (userObj.articleNumber) {
+          for (let i = 0; i < userObj.articleNumber; i++) {
+            const docRef = doc(db, "posts", `@${userObj.id}_${i}`);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists())
+              await updateDoc(docRef, {
+                userPhotoURL: url,
+              });
+          }
+        }
         refreshUser();
         setIsImgUpdateLoading(false);
         alert("프로필 사진 변경이 완료되었습니다");

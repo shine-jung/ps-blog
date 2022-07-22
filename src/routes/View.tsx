@@ -79,7 +79,10 @@ function View() {
             </Label>
             <CustomBox p={1} mb={1}>
               <Box display="flex">
-                <ViewWriter userObj={userObj ?? null} userId={userObj?.id} />
+                <ViewWriter
+                  userId={postContent.userId}
+                  userPhotoURL={postContent.userPhotoURL}
+                />
                 {postContent.uploadTime && (
                   <Typography>
                     &nbsp;&nbsp;·&nbsp;&nbsp;

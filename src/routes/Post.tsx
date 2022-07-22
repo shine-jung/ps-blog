@@ -115,6 +115,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
       tags: tags ?? [],
       postId: postId,
       userId: userObj.id,
+      userPhotoURL: userObj.photoURL,
       authUid: userObj.authUid,
       articleNumber: userObj.articleNumber,
       uploadTime: serverTimestamp(),
@@ -207,7 +208,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
           previewStyle="vertical"
           height="400px"
           initialEditType="wysiwyg"
-          useCommandShortcut={false}
+          useCommandShortcut={true}
           toolbarItems={[
             ["heading", "bold", "italic", "strike"],
             ["hr", "quote"],

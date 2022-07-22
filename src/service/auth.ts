@@ -1,7 +1,7 @@
 import {
   GoogleAuthProvider,
   GithubAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
   signOut,
 } from "firebase/auth";
 import { auth } from "../service/firebase";
@@ -14,7 +14,7 @@ export const login = (providerName: string) => {
     provider = new GithubAuthProvider();
   }
   if (!provider) return;
-  signInWithPopup(auth, provider);
+  signInWithRedirect(auth, provider);
 };
 
 export const logout = () => {

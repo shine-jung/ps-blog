@@ -55,6 +55,7 @@ export interface IComment {
 export interface IPostContent {
   postId?: string;
   userId?: string;
+  userPhotoURL?: string;
   authUid?: string;
   articleNumber?: number;
   title?: string;

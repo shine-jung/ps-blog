@@ -268,7 +268,7 @@ table.ProseMirror-selectednode {
 
 .toastui-editor-contents ul > li::before {
   content: "";
-  margin-top: 6px;
+  margin-top: 10px;
   margin-left: -17px;
   width: 5px;
   height: 5px;
