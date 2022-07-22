@@ -119,7 +119,6 @@ function EditPost({ refreshUser }: IPostProps) {
     await updateDoc(postsRef, {
       ...postContent,
       tags: tags ?? [],
-      uploadTime: serverTimestamp(),
       lastUpdatedTime: serverTimestamp(),
     });
     refreshUser();
