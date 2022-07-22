@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import Router from "./Router";
+import { useRecoilValue } from "recoil";
+import { onAuthStateChanged } from "firebase/auth";
 import { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
-import { lightTheme, darkTheme } from "./modules/theme";
-import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "./service/atoms";
 import { CssBaseline } from "@mui/material";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./service/firebase";
-import { getCurrentUser } from "./service/user";
-import { IUser } from "./modules/types";
+import Router from "./Router";
+import { auth } from "./services/firebase";
+import { getCurrentUser } from "./services/user";
+import { isDarkAtom } from "./services/atoms";
+import { IUser } from "./types/types";
+import { lightTheme, darkTheme } from "./utils/theme";
 import { Loader } from "./components/components";
 
 const GlobalStyle = createGlobalStyle`

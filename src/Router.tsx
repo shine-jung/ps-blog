@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import { IUser } from "./modules/types";
+import { IUser } from "./types/types";
 import LogIn from "./routes/LogIn";
 import Main from "./routes/Main";
 import Profile from "./routes/Profile";
@@ -54,7 +54,7 @@ function Router({
             />
             <Route
               path="/edit"
-              element={<EditPost refreshUser={refreshUser} userObj={userObj} />}
+              element={<EditPost refreshUser={refreshUser} />}
             />
             <Route path="/@:userId" element={<Home />} />
             <Route path="/@:userId/:articleNumber" element={<ViewPost />} />

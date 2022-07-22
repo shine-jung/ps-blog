@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { PostCardPaper, CustomBox, CardDivider } from "./components";
-import { levels } from "../commons/constants";
-import { IPostContent } from "../modules/types";
+import { levels } from "../utils/constants";
+import { IPostContent } from "../types/types";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ViewTags from "./ViewTags";
 import ViewWriter from "./ViewWriter";
-import { getDisplayTimeByTimestamp } from "../modules/functions";
+import { getDisplayTimeByTimestamp } from "../utils/functions";
 
 interface IPostCardProps {
   postContent: IPostContent;
@@ -19,7 +19,7 @@ function PostCard({ postContent }: IPostCardProps) {
   return (
     <PostCardPaper>
       <Box
-        onClick={() => navigate({ pathname: postLink })}
+        onClick={() => navigate(postLink)}
         sx={{
           minHeight: "178px",
           display: "flex",

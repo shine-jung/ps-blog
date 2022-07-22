@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../service/auth";
-import { IUser } from "../modules/types";
+import { logout } from "../services/auth";
+import { IUser } from "../types/types";
 import {
   Box,
   Toolbar,
@@ -43,6 +43,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
       logout();
     }
     handleCloseUserMenu();
+    alert("로그아웃 되었습니다");
   };
   const [position, setPosition] = useState(window.pageYOffset);
   const transparent = position < 56 ? "transparent" : "paper";
@@ -64,7 +65,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
           <Toolbar disableGutters>
             <IconButton
               sx={{ p: 0, mr: 2 }}
-              onClick={() => navigate({ pathname: "/" })}
+              onClick={() => navigate("/")}
               disableRipple
             >
               <CodeIcon sx={{ width: 32, height: 32 }} />
@@ -81,7 +82,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
                 userSelect: "none",
                 cursor: "pointer",
               }}
-              onClick={() => navigate({ pathname: "/" })}
+              onClick={() => navigate("/")}
             >
               pslog
             </Typography>
@@ -95,7 +96,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
               >
                 <NavButton
                   onClick={() => {
-                    navigate({ pathname: "/post" });
+                    navigate("/post");
                   }}
                 >
                   새 글 쓰기
@@ -146,7 +147,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
                   >
                     <MenuItem
                       onClick={() => {
-                        navigate({ pathname: `/@${userObj?.id}` });
+                        navigate(`/@${userObj?.id}`);
                         handleCloseUserMenu();
                       }}
                     >
@@ -154,7 +155,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
                     </MenuItem>
                     <MenuItem
                       onClick={() => {
-                        navigate({ pathname: "/profile" });
+                        navigate("/profile");
                         handleCloseUserMenu();
                       }}
                     >
@@ -170,7 +171,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
                   <Tooltip title="로그인" arrow>
                     <IconButton
                       onClick={() => {
-                        navigate({ pathname: "/login" });
+                        navigate("/login");
                       }}
                       sx={{ p: 0.5 }}
                       disableRipple

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { db, storage } from "../service/firebase";
+import { db, storage } from "../services/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
@@ -10,8 +9,8 @@ import {
   Avatar,
   Divider,
 } from "@mui/material";
-import { IUser, IUpdateUser } from "../modules/types";
-import { updateUser, deleteUser } from "../service/user";
+import { IUser, IUpdateUser } from "../types/types";
+import { updateUser, deleteUser } from "../services/user";
 import { TextInput } from "../components/components";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
@@ -29,7 +28,6 @@ interface IFormData {
 }
 
 function Profile({ refreshUser, userObj }: IProfileProps) {
-  const navigate = useNavigate();
   const [isImgUpdateLoading, setIsImgUpdateLoading] = useState(false);
   const [newImgFile, setNewImgFile] = useState<File | null>(null);
   const [newImgDir, setNewImgDir] = useState<string | ArrayBuffer | null>(
@@ -103,7 +101,6 @@ function Profile({ refreshUser, userObj }: IProfileProps) {
       ...formData,
     } as IUpdateUser);
     refreshUser();
-    navigate({ pathname: `/@${userObj.id}` });
     alert("프로필이 업데이트 되었습니다");
   };
   const onClickDeleteBtn = async () => {

@@ -4,7 +4,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth } from "../service/firebase";
+import { auth } from "./firebase";
 
 export const login = (providerName: string) => {
   let provider;

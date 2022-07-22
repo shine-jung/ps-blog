@@ -6,11 +6,11 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { auth, db } from "../service/firebase";
-import { logout } from "../service/auth";
+import { auth, db } from "../services/firebase";
+import { logout } from "../services/auth";
 import { Container, Box, Button, Typography } from "@mui/material";
 import { TextInput } from "../components/components";
-import { IUser } from "../modules/types";
+import { IUser } from "../types/types";
 
 interface IFormData {
   name?: string;

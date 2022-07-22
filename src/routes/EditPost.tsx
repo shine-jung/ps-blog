@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetchProblemInfo } from "../service/api";
+import { fetchProblemInfo } from "../services/api";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { db } from "../service/firebase";
+import { db } from "../services/firebase";
 import {
   Box,
   Button,
@@ -17,8 +17,8 @@ import {
   CustomBox,
   FormBox,
 } from "../components/components";
-import { IUser, IPostContent, ITag } from "../modules/types";
-import { levels, languages } from "../commons/constants";
+import { IPostContent, ITag } from "../types/types";
+import { levels, languages } from "../utils/constants";
 import { Editor } from "@toast-ui/react-editor";
 import "../styles/editor.css";
 import "@toast-ui/editor/dist/i18n/ko-kr";
@@ -33,10 +33,9 @@ interface RouteState {
 
 interface IPostProps {
   refreshUser: () => void;
-  userObj: IUser | null;
 }
 
-function EditPost({ refreshUser, userObj }: IPostProps) {
+function EditPost({ refreshUser }: IPostProps) {
   const navigate = useNavigate();
   const { state } = useLocation() as RouteState;
   const editorRef = useRef<any>();
@@ -108,14 +107,14 @@ function EditPost({ refreshUser, userObj }: IPostProps) {
   }, []);
   useEffect(() => {
     setTags(state.postContent.tags);
-    editorRef.current?.getInstance().setHTML(state.postContent.description);
+    editorRef.current.getInstance().setHTML(state.postContent.description);
   }, [state.postContent]);
   const onPostBtnClick = async () => {
-    if (!postContent?.title || !postContent?.description) {
+    if (!postContent.title || !postContent.description) {
       alert("내용을 입력해주세요");
       return;
     }
-    if (!userObj?.id || !state.postContent.postId) return;
+    if (!state.postContent.postId) return;
     const postsRef = doc(db, "posts", state.postContent.postId);
     await updateDoc(postsRef, {
       ...postContent,
@@ -141,13 +140,13 @@ function EditPost({ refreshUser, userObj }: IPostProps) {
         <Box display="flex" ml={1}>
           <img
             src={`https://static.solved.ac/tier_small/${
-              postContent?.level ? postContent?.level : "sprout"
+              postContent.level ? postContent.level : "sprout"
             }.svg`}
-            alt={levels[postContent?.level ?? 0]}
+            alt={levels[postContent.level ?? 0]}
             width="24px"
           />
           <Label variant="h6" sx={{ ml: 0.5 }}>
-            {levels[postContent?.level ?? 0]}
+            {levels[postContent.level ?? 0]}
           </Label>
         </Box>
         <Typography sx={{ textAlign: "end" }}>
@@ -159,13 +158,13 @@ function EditPost({ refreshUser, userObj }: IPostProps) {
           <Label sx={{ mr: 1 }}>글 제목</Label>
           <TextInput
             type="text"
-            value={postContent?.title ?? ""}
+            value={postContent.title}
             onChange={onChangeFormValue}
             name="title"
             sx={{ width: 250, mr: 2.5 }}
           />
           <NativeSelect
-            value={postContent?.language}
+            value={postContent.language}
             variant="outlined"
             onChange={onChangeLanguage}
             color="primary"
@@ -216,7 +215,7 @@ function EditPost({ refreshUser, userObj }: IPostProps) {
       </Box>
       <CodeInput
         type="text"
-        value={postContent?.code?.replaceAll("&nbsp;", " ") ?? ""}
+        value={postContent?.code?.replaceAll("&nbsp;", " ")}
         onChange={onChangeCode}
         name="code"
         multiline
@@ -235,7 +234,7 @@ function EditPost({ refreshUser, userObj }: IPostProps) {
           <Label sx={{ mr: 1 }}>문제 링크</Label>
           <TextInput
             type="url"
-            value={postContent?.problemUrl ?? ""}
+            value={postContent.problemUrl}
             onChange={onChangeFormValue}
             name="problemUrl"
             sx={{ width: 350 }}

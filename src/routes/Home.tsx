@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUser } from "../service/user";
+import { getUser } from "../services/user";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../service/firebase";
-import { IPostContent, IUser } from "../modules/types";
+import { db } from "../services/firebase";
+import { IPostContent, IUser } from "../types/types";
 import PostList from "../components/PostList";
 import {
   Container,

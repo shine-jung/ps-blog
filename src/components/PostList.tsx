@@ -1,6 +1,6 @@
 import { Grid, Box, NativeSelect } from "@mui/material";
 import { useState } from "react";
-import { IPostContent } from "../modules/types";
+import { IPostContent } from "../types/types";
 import Pagination from "./Pagination";
 import PostCard from "./PostCard";
 

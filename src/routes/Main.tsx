@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../service/firebase";
-import { IPostContent } from "../modules/types";
+import { db } from "../services/firebase";
+import { IPostContent } from "../types/types";
 import PostList from "../components/PostList";
 import { Container, Typography } from "@mui/material";
 import { Loader } from "../components/components";

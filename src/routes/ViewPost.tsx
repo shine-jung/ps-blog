@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUser } from "../service/user";
-import { IPostContent, IUser } from "../modules/types";
+import { getUser } from "../services/user";
+import { IPostContent, IUser } from "../types/types";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
-import { auth, db } from "../service/firebase";
+import { auth, db } from "../services/firebase";
 import { Box, Container, Typography, Link } from "@mui/material";
 import { Label, CustomBox, Loader } from "../components/components";
-import { levels } from "../commons/constants";
+import { levels } from "../utils/constants";
 import ViewDescription from "../components/ViewDescription";
 import ViewCode from "../components/ViewCode";
 import ViewTags from "../components/ViewTags";
 import ViewWriter from "../components/ViewWriter";
-import { getDisplayTimeByTimestamp } from "../modules/functions";
+import { getDisplayTimeByTimestamp } from "../utils/functions";
 
 function ViewPost() {
   const user = auth.currentUser;
@@ -24,7 +24,7 @@ function ViewPost() {
   const removePost = async (postId?: string) => {
     if (!postId) return;
     await deleteDoc(doc(db, "posts", postId));
-    navigate({ pathname: `/@${userId}` });
+    navigate(`/@${userId}`);
     alert("글이 삭제되었습니다");
   };
   useEffect(() => {

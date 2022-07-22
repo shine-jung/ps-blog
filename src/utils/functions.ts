@@ -1,4 +1,4 @@
-import { Timestamp } from "./types";
+import { Timestamp } from "../types/types";
 
 export const getDisplayTime = (time: Date) => {
   const milliSeconds = new Date().getTime() - time.getTime();

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchProblemInfo } from "../service/api";
+import { fetchProblemInfo } from "../services/api";
 import {
   doc,
   setDoc,
@@ -8,7 +8,7 @@ import {
   increment,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../service/firebase";
+import { db } from "../services/firebase";
 import {
   Box,
   Button,
@@ -23,8 +23,8 @@ import {
   CustomBox,
   FormBox,
 } from "../components/components";
-import { IUser, INewPostContent, ITag } from "../modules/types";
-import { levels, languages } from "../commons/constants";
+import { IUser, INewPostContent, ITag } from "../types/types";
+import { levels, languages } from "../utils/constants";
 import { Editor } from "@toast-ui/react-editor";
 import "../styles/editor.css";
 import "@toast-ui/editor/dist/i18n/ko-kr";
@@ -166,7 +166,7 @@ function UploadPost({ refreshUser, userObj }: INewPostProps) {
           <Label sx={{ mr: 1 }}>글 제목</Label>
           <TextInput
             type="text"
-            value={newPostContent?.title ?? ""}
+            value={newPostContent?.title}
             onChange={onChangeFormValue}
             name="title"
             sx={{ width: 250, mr: 2.5 }}
@@ -223,7 +223,7 @@ function UploadPost({ refreshUser, userObj }: INewPostProps) {
       </Box>
       <CodeInput
         type="text"
-        value={newPostContent?.code?.replaceAll("&nbsp;", " ") ?? ""}
+        value={newPostContent?.code?.replaceAll("&nbsp;", " ")}
         onChange={onChangeCode}
         name="code"
         multiline
@@ -242,7 +242,7 @@ function UploadPost({ refreshUser, userObj }: INewPostProps) {
           <Label sx={{ mr: 1 }}>문제 링크</Label>
           <TextInput
             type="url"
-            value={newPostContent?.problemUrl ?? ""}
+            value={newPostContent?.problemUrl}
             onChange={onChangeFormValue}
             name="problemUrl"
             sx={{ width: 350 }}
@@ -253,7 +253,7 @@ function UploadPost({ refreshUser, userObj }: INewPostProps) {
             variant="text"
             color="primary"
             sx={{ mr: 1 }}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/@${userObj?.id}`)}
           >
             취소
           </Button>

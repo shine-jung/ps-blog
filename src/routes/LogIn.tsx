@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { login } from "../service/auth";
+import { login } from "../services/auth";
 import { Button, Box, Typography, Container } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,7 +39,7 @@ function LogIn() {
             onClick={() => login("google")}
             fullWidth
             variant="contained"
-            color="primary"
+            color="success"
             sx={{ mb: 2 }}
           >
             <Typography sx={{ mr: 1 }}>Continue with Google</Typography>
@@ -49,7 +49,7 @@ function LogIn() {
             onClick={() => login("github")}
             fullWidth
             variant="contained"
-            color="secondary"
+            color="warning"
             sx={{ mb: 3 }}
           >
             <Typography sx={{ mr: 1 }}>Continue with Github</Typography>

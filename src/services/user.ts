@@ -7,8 +7,8 @@ import {
   deleteDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { IUpdateUser, IUser } from "../modules/types";
-import { auth, db } from "../service/firebase";
+import { IUpdateUser, IUser } from "../types/types";
+import { auth, db } from "./firebase";
 import { logout } from "./auth";
 
 const addUser = async (user: User) => {
