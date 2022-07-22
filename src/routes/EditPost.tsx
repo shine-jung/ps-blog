@@ -20,10 +20,10 @@ import {
 import { IPostContent, ITag } from "../types/types";
 import { levels, languages } from "../utils/constants";
 import { Editor } from "@toast-ui/react-editor";
-import "../styles/editor.css";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 import Tags from "@yaireo/tagify/dist/react.tagify";
-import "../styles/tagify.css";
+import "../styles/css/editor.css";
+import "../styles/css/tagify.css";
 
 interface RouteState {
   state: {
@@ -145,7 +145,7 @@ function EditPost({ refreshUser }: IPostProps) {
             alt={levels[postContent.level ?? 0]}
             width="24px"
           />
-          <Label variant="h6" sx={{ ml: 0.5 }}>
+          <Label variant="h6" sx={{ ml: "6px" }}>
             {levels[postContent.level ?? 0]}
           </Label>
         </Box>
@@ -153,7 +153,7 @@ function EditPost({ refreshUser }: IPostProps) {
           문제 번호를 입력하세요 (백준만 가능)
         </Typography>
       </CustomBox>
-      <CustomBox sx={{ mb: 3 }}>
+      <CustomBox sx={{ mb: 2 }}>
         <Box sx={{ display: "flex" }}>
           <Label sx={{ mr: 1 }}>글 제목</Label>
           <TextInput
@@ -183,12 +183,7 @@ function EditPost({ refreshUser }: IPostProps) {
             onChange={onChangeProblemId}
             sx={{ width: 100, mr: 2 }}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ height: 40 }}
-          >
+          <Button type="submit" variant="contained" color="primary">
             문제 가져오기
           </Button>
         </FormBox>

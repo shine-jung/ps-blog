@@ -28,7 +28,7 @@ export const TextInput = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   fontSize: "1rem",
   backgroundColor: alpha(theme.palette.grey[500], 0.15),
-  padding: "4px 12px",
+  padding: "2px 12px 2.5px",
   borderRadius: "4px",
 }));
 
@@ -45,7 +45,7 @@ export const CodeInput = styled(InputBase)(({ theme }) => ({
 }));
 
 export const Label = styled(Typography)(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: "6.25px 8px",
 }));
 
 export const CustomBox = styled(Box)(() => ({

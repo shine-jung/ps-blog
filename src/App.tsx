@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { onAuthStateChanged } from "firebase/auth";
-import { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import Router from "./Router";
@@ -9,23 +8,9 @@ import { auth } from "./services/firebase";
 import { getCurrentUser } from "./services/user";
 import { isDarkAtom } from "./services/atoms";
 import { IUser } from "./types/types";
-import { lightTheme, darkTheme } from "./utils/theme";
+import { GlobalStyle } from "./styles/GlobalStyle";
+import { lightTheme, darkTheme } from "./styles/theme";
 import { Loader } from "./components/components";
-
-const GlobalStyle = createGlobalStyle`
-  ul,
-  ol {
-    padding: 6px 0px 0px 20px;
-  }
-  ul li,
-  ol li {
-    padding: 0px 0px 8px 4px;
-  }
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-`;
 
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
