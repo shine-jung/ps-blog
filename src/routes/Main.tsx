@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../service/firebase";
-import { IPostContent } from "../modules/types";
+import { db } from "../services/firebase";
+import { IPostContent } from "../types/types";
 import PostList from "../components/PostList";
 import { Container, Typography } from "@mui/material";
-import { Loader } from "../components/styledComponents";
+import { Loader } from "../components/components";
 
 function Main() {
   const [init, setInit] = useState(false);
@@ -21,13 +21,15 @@ function Main() {
     );
   };
   useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `pslog`;
     getPostContents();
     setInit(true);
   }, []);
   return (
     <>
       {init ? (
-        <Container component="main" maxWidth="lg" sx={{ my: 16 }}>
+        <Container component="main" maxWidth="lg">
           <Typography variant="h4" sx={{ mb: 4 }}>
             전체 글
           </Typography>

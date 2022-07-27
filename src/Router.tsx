@@ -1,13 +1,15 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import { IUser } from "./modules/types";
-import Header from "./components/Header";
+import { IUser } from "./types/types";
 import LogIn from "./routes/LogIn";
 import Main from "./routes/Main";
 import Profile from "./routes/Profile";
 import Home from "./routes/Home";
-import Post from "./routes/Post";
-import View from "./routes/View";
+import UploadPost from "./routes/UploadPost";
+import EditPost from "./routes/EditPost";
+import ViewPost from "./routes/ViewPost";
 import Register from "./routes/Register";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 
 interface IRouterProps {
@@ -26,36 +28,41 @@ function Router({
   return (
     <BrowserRouter>
       <ScrollToTop />
-      {isRegistered && <Header userObj={userObj} />}
+      <Header userObj={userObj} isLoggedIn={isRegistered} />
       <Routes>
         {isLoggedIn ? (
-          isRegistered ? (
-            <>
-              <Route path="/" element={<Main />} />
-              <Route
-                path="/profile"
-                element={
-                  <Profile refreshUser={refreshUser} userObj={userObj} />
-                }
-              />
-              <Route
-                path="/post"
-                element={<Post refreshUser={refreshUser} userObj={userObj} />}
-              />
-              <Route path="/@:userId" element={<Home />} />
-              <Route path="/@:userId/:articleNumber" element={<View />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </>
-          ) : (
-            <Route
-              path="/*"
-              element={<Register refreshUser={refreshUser} userObj={userObj} />}
-            />
-          )
+          <Route
+            path="/profile"
+            element={<Profile refreshUser={refreshUser} userObj={userObj} />}
+          />
         ) : (
-          <Route path="/*" element={<LogIn />} />
+          <Route path="/login" element={<LogIn />} />
+        )}
+        {isLoggedIn && !isRegistered ? (
+          <Route
+            path="/*"
+            element={<Register refreshUser={refreshUser} userObj={userObj} />}
+          />
+        ) : (
+          <>
+            <Route path="/" element={<Main />} />
+            <Route
+              path="/post"
+              element={
+                <UploadPost refreshUser={refreshUser} userObj={userObj} />
+              }
+            />
+            <Route
+              path="/edit"
+              element={<EditPost refreshUser={refreshUser} />}
+            />
+            <Route path="/@:userId" element={<Home />} />
+            <Route path="/@:userId/:articleNumber" element={<ViewPost />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </>
         )}
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

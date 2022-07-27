@@ -1,23 +1,16 @@
 import { useEffect, useState } from "react";
-import Router from "./Router";
-import { createGlobalStyle } from "styled-components";
-import { ThemeProvider } from "@mui/material/styles";
-import { lightTheme, darkTheme } from "./modules/theme";
 import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "./service/atoms";
-import { CssBaseline } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./service/firebase";
-import { getCurrentUser } from "./service/user";
-import { IUser } from "./modules/types";
-import { Loader } from "./components/styledComponents";
-
-const GlobalStyle = createGlobalStyle`
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-`;
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import Router from "./Router";
+import { auth } from "./services/firebase";
+import { getCurrentUser } from "./services/user";
+import { isDarkAtom } from "./services/atoms";
+import { IUser } from "./types/types";
+import { GlobalStyle } from "./styles/GlobalStyle";
+import { lightTheme, darkTheme } from "./styles/theme";
+import { Loader } from "./components/components";
 
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
@@ -45,7 +38,7 @@ function App() {
           <Router
             refreshUser={refreshUser}
             isLoggedIn={Boolean(userObj)}
-            isRegistered={userObj?.isRegistered ?? false}
+            isRegistered={Boolean(userObj?.id)}
             userObj={userObj ?? null}
           />
         ) : (

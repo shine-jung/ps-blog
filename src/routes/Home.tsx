@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUser } from "../service/user";
+import { getUser } from "../services/user";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../service/firebase";
-import { IPostContent, IUser } from "../modules/types";
+import { db } from "../services/firebase";
+import { IPostContent, IUser } from "../types/types";
 import PostList from "../components/PostList";
 import {
   Container,
@@ -13,7 +13,7 @@ import {
   Avatar,
   Link,
 } from "@mui/material";
-import { CustomBox, Loader } from "../components/styledComponents";
+import { CustomBox, Loader } from "../components/components";
 
 function Home() {
   const { userId } = useParams();
@@ -44,11 +44,15 @@ function Home() {
     });
     setInit(true);
   }, [userId]);
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `${userId} - pslog`;
+  }, [userId]);
   return (
     <>
       {isVaild ? (
         init && userObj ? (
-          <Container component="main" maxWidth="md" sx={{ my: 16 }}>
+          <Container component="main" maxWidth="md">
             <CustomBox mx={4} alignItems="center">
               <Box display="flex" alignItems="center">
                 <Avatar
