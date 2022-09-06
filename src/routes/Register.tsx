@@ -121,12 +121,12 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
         <Button
           onClick={logout}
           variant="outlined"
-          color="secondary"
+          color="warning"
           sx={{ mr: 2 }}
         >
           취소
         </Button>
-        <Button type="submit" variant="outlined" color="primary">
+        <Button type="submit" variant="outlined" color="success">
           가입
         </Button>
       </form>
