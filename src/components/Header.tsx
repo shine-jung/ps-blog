@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../services/auth";
 import { IUser } from "../types/types";
@@ -23,6 +23,8 @@ import {
 import CodeIcon from "@mui/icons-material/Code";
 import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
+import { useSetRecoilState } from "recoil";
+import { searchTermState } from "../services/atoms";
 
 interface IHeaderProps {
   userObj: IUser | null;
@@ -31,6 +33,8 @@ interface IHeaderProps {
 
 function Header({ userObj, isLoggedIn }: IHeaderProps) {
   const navigate = useNavigate();
+  const setSearchAtom = useSetRecoilState(searchTermState);
+  const [searchTerm, setSearchTerm] = useState("");
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -47,6 +51,15 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
   };
   const [position, setPosition] = useState(window.pageYOffset);
   const transparent = position < 56 ? "transparent" : "paper";
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.currentTarget.value);
+  };
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSearchAtom(searchTerm.trim());
+    setSearchTerm("");
+    navigate("/");
+  };
   useEffect(() => {
     const handleScroll = () => {
       let moving = window.pageYOffset;
@@ -56,8 +69,7 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  });
-
+  }, []);
   return (
     <Box flexGrow={1} height={128}>
       <AppBar className={`${transparent}`}>
@@ -65,7 +77,10 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
           <Toolbar disableGutters>
             <IconButton
               sx={{ p: 0, mr: 2 }}
-              onClick={() => navigate("/")}
+              onClick={() => {
+                setSearchAtom("");
+                navigate("/");
+              }}
               disableRipple
             >
               <CodeIcon sx={{ width: 32, height: 32 }} />
@@ -82,7 +97,10 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
                 userSelect: "none",
                 cursor: "pointer",
               }}
-              onClick={() => navigate("/")}
+              onClick={() => {
+                setSearchAtom("");
+                navigate("/");
+              }}
             >
               pslog
             </Typography>
@@ -108,10 +126,14 @@ function Header({ userObj, isLoggedIn }: IHeaderProps) {
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
-              <SearchInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
+              <form onSubmit={onSubmit}>
+                <SearchInputBase
+                  placeholder="Search…"
+                  inputProps={{ "aria-label": "search" }}
+                  value={searchTerm}
+                  onChange={onChange}
+                />
+              </form>
             </Search>
             <Box flexGrow={0} ml={2}>
               {isLoggedIn ? (
