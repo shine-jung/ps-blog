@@ -53,8 +53,14 @@ function PostList({ postContents, maxColum }: IPostListProps) {
             />
           </>
         ) : (
-          <Box display="flex" justifyContent="center" p={4}>
-            글이 아직 없습니다.
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="50vh"
+            p={4}
+          >
+            결과가 없습니다.
           </Box>
         ))}
     </Box>
