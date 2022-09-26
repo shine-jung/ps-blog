@@ -31,21 +31,11 @@ function Router({
       <Header userObj={userObj} isLoggedIn={isRegistered} />
       <Routes>
         {isLoggedIn ? (
-          <Route
-            path="/profile"
-            element={<Profile refreshUser={refreshUser} userObj={userObj} />}
-          />
-        ) : (
-          <Route path="/login" element={<LogIn />} />
-        )}
-        {isLoggedIn && !isRegistered ? (
-          <Route
-            path="/*"
-            element={<Register refreshUser={refreshUser} userObj={userObj} />}
-          />
-        ) : (
           <>
-            <Route path="/" element={<Main />} />
+            <Route
+              path="/profile"
+              element={<Profile refreshUser={refreshUser} userObj={userObj} />}
+            />
             <Route
               path="/post"
               element={
@@ -56,6 +46,18 @@ function Router({
               path="/edit"
               element={<EditPost refreshUser={refreshUser} />}
             />
+          </>
+        ) : (
+          <Route path="/login" element={<LogIn />} />
+        )}
+        {isLoggedIn && !isRegistered ? (
+          <Route
+            path="*"
+            element={<Register refreshUser={refreshUser} userObj={userObj} />}
+          />
+        ) : (
+          <>
+            <Route path="/" element={<Main />} />
             <Route path="/@:userId" element={<Home />} />
             <Route path="/@:userId/:articleNumber" element={<ViewPost />} />
             <Route path="*" element={<Navigate to="/" replace />} />
