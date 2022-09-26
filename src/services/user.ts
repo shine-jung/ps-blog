@@ -7,18 +7,17 @@ import {
   deleteDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { IUpdateUser, IUser } from "../modules/types";
-import { auth, db } from "../service/firebase";
+import { IUpdateUser, IUser } from "../types/types";
+import { auth, db } from "./firebase";
 import { logout } from "./auth";
 
 const addUser = async (user: User) => {
-  await setDoc(doc(db, "users", user.uid), {
+  await setDoc(doc(db, "auths", user.uid), {
     authUid: user.uid,
     id: null,
     name: user.displayName,
     email: user.providerData[0].email,
     photoURL: user.photoURL,
-    isRegistered: false,
   });
 };
 
@@ -44,7 +43,7 @@ export const deleteUser = async (user: IUser) => {
     alert("취소되었습니다");
     return;
   }
-  const authRef = doc(db, "users", user.authUid);
+  const authRef = doc(db, "auths", user.authUid);
   const userRef = doc(db, "users", user.id);
   if (user.articleNumber) {
     for (let i = 0; i < user.articleNumber; i++) {
@@ -62,7 +61,7 @@ export const deleteUser = async (user: IUser) => {
 export const getCurrentUser = async () => {
   const user = auth.currentUser;
   if (!user) return;
-  const authRef = doc(db, "users", user.uid);
+  const authRef = doc(db, "auths", user.uid);
   const authDocSnap = await getDoc(authRef);
   if (authDocSnap.exists()) {
     const authData = authDocSnap.data();

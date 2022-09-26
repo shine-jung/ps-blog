@@ -1,8 +1,8 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../service/atoms";
-import { IconButton, Tooltip } from "@mui/material";
-import Moon from "@mui/icons-material/DarkMode";
+import { isDarkAtom } from "../services/atoms";
+import { IconButton } from "@mui/material";
 import Sun from "@mui/icons-material/LightMode";
+import Moon from "@mui/icons-material/DarkMode";
 
 function LightDarkToggle() {
   const isDark = useRecoilValue(isDarkAtom);
@@ -10,17 +10,13 @@ function LightDarkToggle() {
   const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   localStorage.setItem("darkMode", isDark.toString());
   return (
-    <>
-      <Tooltip title={isDark ? "라이트 모드" : "다크 모드"} arrow>
-        <IconButton onClick={toggleDarkAtom} sx={{ width: 32, height: 32 }}>
-          {isDark ? (
-            <Sun sx={{ width: 20, height: 20 }} />
-          ) : (
-            <Moon sx={{ width: 20, height: 20 }} />
-          )}
-        </IconButton>
-      </Tooltip>
-    </>
+    <IconButton onClick={toggleDarkAtom} sx={{ width: 32, height: 32 }}>
+      {isDark ? (
+        <Sun sx={{ width: 20, height: 20 }} />
+      ) : (
+        <Moon sx={{ width: 20, height: 20 }} />
+      )}
+    </IconButton>
   );
 }
 

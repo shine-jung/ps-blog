@@ -13,7 +13,6 @@ export interface IUser {
   articleNumber?: number;
   introduction?: string;
   photoURL?: string;
-  isRegistered?: boolean;
   createdTime?: Timestamp;
   lastLoginTime?: Timestamp;
 }
@@ -56,6 +55,7 @@ export interface IComment {
 export interface IPostContent {
   postId?: string;
   userId?: string;
+  userPhotoURL?: string;
   authUid?: string;
   articleNumber?: number;
   title?: string;

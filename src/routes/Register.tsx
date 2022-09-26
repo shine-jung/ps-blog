@@ -6,11 +6,11 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { auth, db } from "../service/firebase";
-import { logout } from "../service/auth";
+import { auth, db } from "../services/firebase";
+import { logout } from "../services/auth";
 import { Container, Box, Button, Typography } from "@mui/material";
-import { StyledInputBase } from "../components/styledComponents";
-import { IUser } from "../modules/types";
+import { TextInput } from "../components/components";
+import { IUser } from "../types/types";
 
 interface IFormData {
   name?: string;
@@ -39,7 +39,7 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
     const user = auth.currentUser;
     const id = formData?.id;
     if (!user || !id) return;
-    const authRef = doc(db, "users", user.uid);
+    const authRef = doc(db, "auths", user.uid);
     const userRef = doc(db, "users", id);
     const authDocSnap = await getDoc(authRef);
     const userDocSnap = await getDoc(userRef);
@@ -52,7 +52,6 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
       ...formData,
       blogTitle: `${formData?.name}님의 블로그`,
       articleNumber: 0,
-      isRegistered: true,
       createdTime: serverTimestamp(),
       lastLoginTime: serverTimestamp(),
     });
@@ -67,8 +66,12 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
       setFormData({ name: userObj?.name, email: userObj?.email });
     }
   }, [userObj]);
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `회원가입 - pslog`;
+  }, []);
   return (
-    <Container component="main" maxWidth="md" sx={{ mt: 12, mb: 16 }}>
+    <Container component="main" maxWidth="md">
       <Typography variant="h4" sx={{ mb: 3 }}>
         환영합니다!
       </Typography>
@@ -78,7 +81,7 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
       <form onSubmit={onSubmit}>
         <Box marginBottom={2}>
           <Typography marginBottom={1}>이름</Typography>
-          <StyledInputBase
+          <TextInput
             type="text"
             name="name"
             defaultValue={userObj?.name}
@@ -88,7 +91,7 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
         </Box>
         <Box marginBottom={2}>
           <Typography marginBottom={1}>이메일</Typography>
-          <StyledInputBase
+          <TextInput
             type="email"
             name="email"
             defaultValue={userObj?.email}
@@ -99,15 +102,15 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
         </Box>
         <Box marginBottom={2}>
           <Typography marginBottom={1}>아이디</Typography>
-          <StyledInputBase type="text" name="id" onChange={onChange} required />
+          <TextInput type="text" name="id" onChange={onChange} required />
         </Box>
         <Box marginBottom={2}>
           <Typography marginBottom={1}>백준 아이디 (선택)</Typography>
-          <StyledInputBase type="text" name="bojId" onChange={onChange} />
+          <TextInput type="text" name="bojId" onChange={onChange} />
         </Box>
         <Box marginBottom={4}>
           <Typography marginBottom={1}>한 줄 소개</Typography>
-          <StyledInputBase
+          <TextInput
             type="text"
             name="introduction"
             sx={{ width: 400 }}
@@ -118,12 +121,12 @@ function Register({ refreshUser, userObj }: IRegisterProps) {
         <Button
           onClick={logout}
           variant="outlined"
-          color="secondary"
+          color="warning"
           sx={{ mr: 2 }}
         >
           취소
         </Button>
-        <Button type="submit" variant="outlined" color="primary">
+        <Button type="submit" variant="outlined" color="success">
           가입
         </Button>
       </form>

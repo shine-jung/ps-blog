@@ -12,6 +12,9 @@ const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
+  "&:before": {
+    display: "none",
+  },
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (

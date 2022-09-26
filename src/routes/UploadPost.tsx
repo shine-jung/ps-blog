@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchProblemInfo } from "../service/api";
+import { fetchProblemInfo } from "../services/api";
 import {
   doc,
   setDoc,
@@ -8,7 +8,7 @@ import {
   increment,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../service/firebase";
+import { db } from "../services/firebase";
 import {
   Box,
   Button,
@@ -17,26 +17,26 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  StyledInputBase,
+  TextInput,
   CodeInput,
   Label,
   CustomBox,
   FormBox,
-} from "../components/styledComponents";
-import { IUser, INewPostContent, ITag } from "../modules/types";
-import { levels, languages } from "../commons/constants";
+} from "../components/components";
+import { IUser, INewPostContent, ITag } from "../types/types";
+import { levels, languages } from "../utils/constants";
 import { Editor } from "@toast-ui/react-editor";
-import "../styles/editor.css";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 import Tags from "@yaireo/tagify/dist/react.tagify";
-import "../styles/tagify.css";
+import "../styles/css/editor.css";
+import "../styles/css/tagify.css";
 
-interface IPostProps {
+interface INewPostProps {
   refreshUser: () => void;
   userObj: IUser | null;
 }
 
-function Post({ refreshUser, userObj }: IPostProps) {
+function UploadPost({ refreshUser, userObj }: INewPostProps) {
   const navigate = useNavigate();
   const editorRef = useRef<any>();
   const [newPostContent, setNewPostContent] = useState<INewPostContent>();
@@ -99,6 +99,10 @@ function Post({ refreshUser, userObj }: IPostProps) {
       }
     }
   };
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `글 쓰기 - pslog`;
+  }, []);
   const onPostBtnClick = async () => {
     if (!newPostContent?.title || !newPostContent?.description) {
       alert("내용을 입력해주세요");
@@ -106,11 +110,13 @@ function Post({ refreshUser, userObj }: IPostProps) {
     }
     if (!userObj?.id) return;
     const postId = `@${userObj.id}_${userObj.articleNumber}`;
+    const postLink = `/@${userObj.id}/${userObj.articleNumber}`;
     await setDoc(doc(db, "posts", postId), {
       ...newPostContent,
       tags: tags ?? [],
       postId: postId,
       userId: userObj.id,
+      userPhotoURL: userObj.photoURL,
       authUid: userObj.authUid,
       articleNumber: userObj.articleNumber,
       uploadTime: serverTimestamp(),
@@ -125,7 +131,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
       articleNumber: increment(1),
     });
     refreshUser();
-    navigate({ pathname: `/@${userObj.id}` });
+    navigate(postLink);
     alert("새로운 글이 업로드 되었습니다");
   };
   const getTagsArray = (tags: ITag[] | undefined) => {
@@ -137,8 +143,8 @@ function Post({ refreshUser, userObj }: IPostProps) {
     );
   };
   return (
-    <Container component="main" maxWidth="md" sx={{ my: 16 }}>
-      <CustomBox sx={{ mb: 0.5 }}>
+    <Container component="main" maxWidth="md">
+      <CustomBox sx={{ mb: 1 }}>
         <Box display="flex" ml={1}>
           <img
             src={`https://static.solved.ac/tier_small/${
@@ -147,7 +153,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
             alt={levels[newPostContent?.level ?? 0]}
             width="24px"
           />
-          <Label variant="h6" sx={{ ml: 0.5 }}>
+          <Label variant="h6" sx={{ ml: "6px" }}>
             {levels[newPostContent?.level ?? 0]}
           </Label>
         </Box>
@@ -155,12 +161,12 @@ function Post({ refreshUser, userObj }: IPostProps) {
           문제 번호를 입력하세요 (백준만 가능)
         </Typography>
       </CustomBox>
-      <CustomBox sx={{ mb: 3 }}>
+      <CustomBox sx={{ mb: 2 }}>
         <Box sx={{ display: "flex" }}>
           <Label sx={{ mr: 1 }}>글 제목</Label>
-          <StyledInputBase
+          <TextInput
             type="text"
-            value={newPostContent?.title ?? ""}
+            value={newPostContent?.title}
             onChange={onChangeFormValue}
             name="title"
             sx={{ width: 250, mr: 2.5 }}
@@ -180,17 +186,12 @@ function Post({ refreshUser, userObj }: IPostProps) {
           </NativeSelect>
         </Box>
         <FormBox onSubmit={onSubmitProblemId}>
-          <StyledInputBase
+          <TextInput
             type="text"
             onChange={onChangeProblemId}
             sx={{ width: 100, mr: 2 }}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ height: 40 }}
-          >
+          <Button type="submit" variant="contained" color="primary">
             문제 가져오기
           </Button>
         </FormBox>
@@ -199,10 +200,11 @@ function Post({ refreshUser, userObj }: IPostProps) {
         <Editor
           ref={editorRef}
           initialValue="여기에 코드 설명을 입력하세요"
+          placeholder="여기에 코드 설명을 입력하세요"
           previewStyle="vertical"
           height="400px"
           initialEditType="wysiwyg"
-          useCommandShortcut={false}
+          useCommandShortcut={true}
           toolbarItems={[
             ["heading", "bold", "italic", "strike"],
             ["hr", "quote"],
@@ -216,7 +218,7 @@ function Post({ refreshUser, userObj }: IPostProps) {
       </Box>
       <CodeInput
         type="text"
-        value={newPostContent?.code?.replaceAll("&nbsp;", " ") ?? ""}
+        value={newPostContent?.code?.replaceAll("&nbsp;", " ")}
         onChange={onChangeCode}
         name="code"
         multiline
@@ -233,26 +235,30 @@ function Post({ refreshUser, userObj }: IPostProps) {
       <CustomBox sx={{ alignItems: "center" }}>
         <CustomBox>
           <Label sx={{ mr: 1 }}>문제 링크</Label>
-          <StyledInputBase
+          <TextInput
             type="url"
-            value={newPostContent?.problemUrl ?? ""}
+            value={newPostContent?.problemUrl}
             onChange={onChangeFormValue}
             name="problemUrl"
             sx={{ width: 350 }}
           />
         </CustomBox>
-        <Button
-          onClick={onPostBtnClick}
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{ height: 40 }}
-        >
-          글 업로드
-        </Button>
+        <Box display="flex">
+          <Button
+            variant="text"
+            color="primary"
+            sx={{ mr: 1 }}
+            onClick={() => navigate(`/@${userObj?.id}`)}
+          >
+            취소
+          </Button>
+          <Button onClick={onPostBtnClick} variant="contained" color="primary">
+            글 업로드
+          </Button>
+        </Box>
       </CustomBox>
     </Container>
   );
 }
 
-export default Post;
+export default UploadPost;

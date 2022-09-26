@@ -1,88 +1,88 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { getUser } from "../service/user";
+import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
-import { PostCardPaper, CustomBox } from "./styledComponents";
-import { levels } from "../commons/constants";
-import { IPostContent, IUser } from "../modules/types";
+import { PostCardPaper, CustomBox, CardDivider } from "./components";
+import { levels } from "../utils/constants";
+import { IPostContent } from "../types/types";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ViewTags from "./ViewTags";
 import ViewWriter from "./ViewWriter";
-import { getDisplayTimeByTimestamp } from "../modules/functions";
+import { getDisplayTimeByTimestamp } from "../utils/functions";
 
 interface IPostCardProps {
   postContent: IPostContent;
 }
 
 function PostCard({ postContent }: IPostCardProps) {
+  const navigate = useNavigate();
   const postLink = `/@${postContent.userId}/${postContent.articleNumber}`;
-  const [userObj, setUserObj] = useState<IUser | null>();
-  useEffect(() => {
-    if (!postContent.userId) return;
-    getUser(postContent.userId).then((userData) => {
-      if (!userData) return;
-      setUserObj(userData);
-    });
-  }, [postContent]);
   return (
     <PostCardPaper>
-      <Link to={postLink}>
-        <Box
-          sx={{
-            minHeight: "150px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            mb: 0.5,
-          }}
-        >
-          <Box>
-            <CustomBox sx={{ alignItems: "flex-start", height: "100%" }}>
-              <Box sx={{ display: "flex" }}>
-                <img
-                  src={`https://static.solved.ac/tier_small/${
-                    postContent.level ? postContent.level : "sprout"
-                  }.svg`}
-                  alt={levels[postContent.level ?? 0]}
-                  width="20px"
-                />
-                <Typography sx={{ ml: 1 }}>
-                  {levels[postContent.level ?? 0]}
-                </Typography>
-              </Box>
-              <Typography>{postContent.language}</Typography>
-            </CustomBox>
-            <Typography variant="h6">{postContent.title}</Typography>
+      <Box
+        onClick={() => navigate(postLink)}
+        sx={{
+          minHeight: "178px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "12px 12px 8px",
+          cursor: "pointer",
+        }}
+      >
+        <Box>
+          <CustomBox sx={{ alignItems: "flex-start" }}>
+            <Box sx={{ display: "flex" }}>
+              <img
+                src={`https://static.solved.ac/tier_small/${
+                  postContent.level ? postContent.level : "sprout"
+                }.svg`}
+                alt={levels[postContent.level ?? 0]}
+                width="20px"
+              />
+              <Typography sx={{ ml: 1 }}>
+                {levels[postContent.level ?? 0]}
+              </Typography>
+            </Box>
+            <Typography fontWeight={300}>{postContent.language}</Typography>
+          </CustomBox>
+          <Box p={0.5}>
+            <Typography variant="h6" fontWeight={400}>
+              {postContent.title}
+            </Typography>
             <ViewTags tags={postContent.tags} />
           </Box>
-          <Box display="flex">
-            {postContent.uploadTime && (
-              <Typography variant="subtitle2">
-                {getDisplayTimeByTimestamp(postContent.uploadTime)}
-                &nbsp;·&nbsp;
-              </Typography>
-            )}
-            <Typography variant="subtitle2">
-              {postContent.commentCount}개의 댓글
-            </Typography>
-          </Box>
         </Box>
-      </Link>
-      <CustomBox>
-        <ViewWriter userObj={userObj ?? null} userId={postContent.userId} />
+        {postContent.uploadTime && (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            {getDisplayTimeByTimestamp(postContent.uploadTime)}
+            {" · "}
+            {postContent.commentCount}개의 댓글
+          </Typography>
+        )}
+      </Box>
+      <CardDivider />
+      <CustomBox px={1.5} py={0.75}>
+        <ViewWriter
+          userId={postContent.userId}
+          userPhotoURL={postContent.userPhotoURL}
+        />
         <Box
           sx={{
-            width: "35px",
+            width: "40px",
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
           <Box sx={{ color: "#ff6666" }}>
             <FontAwesomeIcon icon={faHeart} />
           </Box>
-          {postContent.likeCount}
+          <Typography variant="body1" color="text.secondary">
+            {postContent.likeCount}
+          </Typography>
         </Box>
       </CustomBox>
     </PostCardPaper>

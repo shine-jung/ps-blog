@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { Viewer } from "@toast-ui/react-editor";
-import "../styles/viewer.css";
+import "../styles/css/viewer.css";
 
 interface IViewDescription {
   description?: string;
